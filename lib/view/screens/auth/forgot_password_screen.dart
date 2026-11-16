@@ -138,6 +138,9 @@ class _ForgetPasswordState extends State<ForgotPasswordScreen> {
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(30.r),
+                  boxShadow: [
+
+                  ]
                 ),
                 child: Center(
                   child: Text(

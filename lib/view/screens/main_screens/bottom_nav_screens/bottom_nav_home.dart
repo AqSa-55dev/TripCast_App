@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import '../../../../utils/app_assets.dart';
+import '../../../../utils/app_colors.dart';
+import 'home_screen.dart';
+
+class BottomNavHome extends StatefulWidget {
+  const BottomNavHome({super.key});
+
+  @override
+  State<BottomNavHome> createState() => _BottomNavHomeState();
+}
+
+class _BottomNavHomeState extends State<BottomNavHome> {
+  int _selectedIndex = 0;
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  List listOfScreens = [
+    HomeScreen()
+  ];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.pureWhite,
+      body: listOfScreens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Image.asset(AppAssets.homeIcon, scale: 2,), label: 'Home'),
+          BottomNavigationBarItem(icon: Image.asset(AppAssets.exploreIcon, scale: 2,), label: 'Explore',),
+          BottomNavigationBarItem(icon: Image.asset(AppAssets.saveIcon, scale: 2,), label: 'Saved'),
+          BottomNavigationBarItem(icon: Image.asset(AppAssets.profileIcon,scale: 2,), label: 'Profile'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.border_grey,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
