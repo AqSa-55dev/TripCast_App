@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
 import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
+import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/bottom_nav_home.dart';
 
 import 'firebase_options.dart';
 
@@ -16,6 +17,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
 
 
   runApp(const MyApp());
@@ -42,7 +44,8 @@ class MyApp extends StatelessWidget {
             colorScheme: .fromSeed(seedColor: Colors.deepPurple),
           ),
 
-          home: const OnboardingScreen(),
+
+          home: BottomNavHome(),
         );
       },
     );
