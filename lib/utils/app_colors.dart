@@ -9,5 +9,6 @@ class AppColors {
   static final Color border_grey = Color(0xffC5D5EA);
   static final Color primarySoft_grey = Color(0xffE4EFFF);
   static final Color sky_grey = Color(0xffDCEBFF);
+  static final Color soft_blue= Color(0xffBBD3F3);
 
 }

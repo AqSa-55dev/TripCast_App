@@ -30,6 +30,7 @@ class CustomTextField extends StatelessWidget {
       obscureText: isObscure??false,
       controller: Controller,
       decoration: InputDecoration(
+          filled: true,
         fillColor: AppColors.pureWhite,
           prefixIcon:InkWell(onTap: onPrefixTap, child: Icon(prefixIcon)) ,
           suffixIcon: InkWell(onTap: onSuffixTap,

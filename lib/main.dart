@@ -1,9 +1,23 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
+import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  await GetStorage.init();
+
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+
   runApp(const MyApp());
 }
 
@@ -19,7 +33,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       // Use builder only if you need to use library outside ScreenUtilInit context
       builder: (_ , child) {
-        return MaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
@@ -28,7 +42,7 @@ class MyApp extends StatelessWidget {
             colorScheme: .fromSeed(seedColor: Colors.deepPurple),
           ),
 
-          home: const LoginSignupScreen(),
+          home: const OnboardingScreen(),
         );
       },
     );
