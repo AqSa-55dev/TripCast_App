@@ -4,9 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trip_cast/view/screens/auth/forgot_password_screen.dart';
 import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
 import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
 import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/bottom_nav_home.dart';
+import 'package:trip_cast/view/screens/main_screens/notifications_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (_ , child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
+          title: 'Trip Cast App',
           theme: ThemeData(
             textTheme: GoogleFonts.plusJakartaSansTextTheme(),
 
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
           ),
 
 
-          home: BottomNavHome(),
+          home: NotificationsScreen(),
         );
       },
     );
