@@ -2,9 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
 
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
+import 'bottom_nav_screens/bottom_nav_home.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -13,6 +17,29 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    String accessToken =LocalStorage.getData(key: LocalStorageKeys.accessToken);
+    _timer = Timer(
+        const Duration(milliseconds: 2500),
+            () {
+          if (accessToken=="") {
+            Get.offAll(() =>  LoginSignupScreen());}
+          else{
+            Get.offAll(() =>  BottomNavHome());}
+        });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
