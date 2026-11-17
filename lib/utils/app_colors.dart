@@ -9,9 +9,15 @@ class AppColors {
   static final Color muted = Color(0xff4F6580);
   static final Color mint = Color(0xffDDF5EC);
   static final Color green = Color(0xff0E5E4A);
+  static final Color soft_green = Color(0xffDDF5EC);
+  static final Color caution_yellow = Color(0xffFFF0CC);
+  static final Color light_red = Color(0xffFEE4E2);
+  static final Color red = Color(0xffE64B42);
   static final Color border_grey = Color(0xffC5D5EA);
   static final Color primarySoft_grey = Color(0xffE4EFFF);
   static final Color sky_grey = Color(0xffDCEBFF);
   static final Color soft_blue= Color(0xffBBD3F3);
+  static final Color orange = Color(0xff8A5200);
+  static final Color soft_orange = Color(0xffFFF0D1);
 
 }

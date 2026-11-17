@@ -1,18 +1,27 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:trip_cast/utils/app_colors.dart';
+import 'package:trip_cast/view/components/custom_small_circle_button.dart';
 
 import '../../components/custom_scaffold.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   NotificationsScreen({super.key});
 
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  bool isAllRead = false;
   final List<Map<String, dynamic>> todayNotifications = [
     {
       "icon": Icons.warning_amber_rounded,
-      "iconBg": Color(0xffFFE8E5),
-      "iconColor": Color(0xffE64B42),
+      "iconBg": AppColors.light_red,
+      "iconColor": AppColors.red,
       "title": "Thunderstorm warning",
       "description":
       "Storms expected near Jhelum between 11 AM - 1 PM on your saved Lahore to Islamabad trip.",
@@ -20,7 +29,7 @@ class NotificationsScreen extends StatelessWidget {
     },
     {
       "icon": Icons.auto_awesome_outlined,
-      "iconBg": AppColors.pureWhite,
+      "iconBg": AppColors.soft_blue,
       "iconColor": AppColors.primary,
       "title": "New AI advice is ready",
       "description":
@@ -29,8 +38,8 @@ class NotificationsScreen extends StatelessWidget {
     },
     {
       "icon": Icons.access_time,
-      "iconBg": Color(0xffFFF0D1),
-      "iconColor": Color(0xffC47A00),
+      "iconBg": AppColors.soft_orange,
+      "iconColor": AppColors.orange,
       "title": "Time to get ready",
       "description":
       "Your trip to Islamabad is scheduled for tomorrow at 8:00 AM.",
@@ -40,8 +49,8 @@ class NotificationsScreen extends StatelessWidget {
 
   final List<Map<String, dynamic>> earlierNotifications = [
     {
-      "icon": Icons.wb_sunny_outlined,
-      "iconBg": AppColors.pureWhite,
+      "icon": Icons.check_circle_outline,
+      "iconBg": AppColors.soft_green,
       "iconColor": AppColors.green,
       "title": "Weather improved",
       "description":
@@ -50,7 +59,7 @@ class NotificationsScreen extends StatelessWidget {
     },
     {
       "icon": Icons.water_drop_outlined,
-      "iconBg": AppColors.pureWhite,
+      "iconBg": AppColors.soft_blue,
       "iconColor": AppColors.primary,
       "title": "Rain on your route",
       "description":
@@ -58,7 +67,6 @@ class NotificationsScreen extends StatelessWidget {
       "time": "Fri",
     },
   ];
-
 
   Widget notificationCard({
     required IconData icon,
@@ -69,11 +77,14 @@ class NotificationsScreen extends StatelessWidget {
     required String time,
     bool showNew = false,
   }) {
+
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: AppColors.pureWhite,
+        color: showNew
+            ? AppColors.pureWhite
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(14.r),
         boxShadow: [
           BoxShadow(
@@ -166,7 +177,6 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(isBackgroundGradient: true,
@@ -179,23 +189,15 @@ class NotificationsScreen extends StatelessWidget {
               12.verticalSpace,
               Row(
                 children: [
-                  InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(30.r),
-                    child: Container(
-                      height: 44.h,
-                      width: 44.w,
-                      decoration: BoxDecoration(
-                        color: AppColors.pureWhite,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.chevron_left,
-                        color: AppColors.ink,
-                        size: 21.sp,
-                      ),
-                    ),
-                  ),
+
+                  CustomSmallCircleButton(
+                      isIcon: true,
+                      icon: Icons.chevron_left_outlined,
+                      iconColor: AppColors.ink,
+                      onButtonTap: () {
+                        Get.back();
+                      }),
+
                   Expanded(
                     child: Center(
                       child: Text(
@@ -208,23 +210,7 @@ class NotificationsScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(30.r),
-                    child: Container(
-                      height: 44.h,
-                      width: 44.w,
-                      decoration: BoxDecoration(
-                        color: AppColors.pureWhite,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.settings_outlined,
-                        color: AppColors.ink,
-                        size: 21.sp,
-                      ),
-                    ),
-                  ),
+                  CustomSmallCircleButton(isIcon: true, icon: Icons.settings_outlined, iconColor: AppColors.ink, onButtonTap: () {}),
                 ],
               ),
 
@@ -233,22 +219,25 @@ class NotificationsScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "3 unread notifications",
-                    style: TextStyle(
-                      color: AppColors.muted_grey,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
+                Text(
+                  isAllRead ? "You are all caught up" : "3 unread notifications",
+                  style: TextStyle(
+                  fontSize: 11.sp,
+                  color: AppColors.muted,
                   ),
+                ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      setState(() {
+                        isAllRead = true;
+                      });
+                    },
                     child: Text(
                       "Mark all as read",
                       style: TextStyle(
+                        fontSize: 11.sp,
                         color: AppColors.primary,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -285,7 +274,7 @@ class NotificationsScreen extends StatelessWidget {
                           title: notification["title"],
                           description: notification["description"],
                           time: notification["time"],
-                          showNew: true,
+                          showNew: !isAllRead,
                         );
                       },
                     ),
