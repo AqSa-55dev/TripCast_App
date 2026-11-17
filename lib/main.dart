@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
           ),
 
 
-          home: BottomNavHome(),
+          home: OnboardingScreen(),
         );
       },
     );

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:trip_cast/services/firebase_services/firebase_auth_services.dart';
 import 'package:trip_cast/utils/app_assets.dart';
 import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/components/custom_button.dart';
 import 'package:trip_cast/view/components/custom_scaffold.dart';
 import 'package:trip_cast/view/components/custom_text_field.dart';
+
+import 'forgot_password_screen.dart';
 
 class LoginSignupScreen extends StatefulWidget {
   const LoginSignupScreen({super.key});
@@ -107,7 +111,8 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                       onSuffixTap: (){onEyeTapped();},
                       isObscure: isPasswordHidden,),
                     Align(alignment: AlignmentGeometry.centerEnd,
-                        child: Text("Forgot Password?", style:  TextStyle(fontSize: 14.sp, fontWeight: FontWeight(900), color: AppColors.primary),)),
+                        child: InkWell(onTap: (){Get.to(()=>ForgotPasswordScreen());},
+                            child: Text("Forgot Password?", style:  TextStyle(fontSize: 14.sp, fontWeight: FontWeight(900), color: AppColors.primary),))),
                     10.verticalSpace,
                     Custombutton(buttonText: "Login", buttonColor: AppColors.primary, TextColor: AppColors.pureWhite, showBoxShadow: true,
                     onButtonTap: (){FirebaseAuthServices().loginWithEmailAndPassword(emailAddress: emailController.text, password: passwordController.text);},),

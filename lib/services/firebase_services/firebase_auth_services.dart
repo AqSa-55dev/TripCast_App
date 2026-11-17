@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/bottom_nav_home.dart';
 
 import '../../view/screens/auth/login_signup_screen.dart';
 import '../../view/screens/main_screens/bottom_nav_screens/home_screen.dart';
@@ -63,7 +64,7 @@ class FirebaseAuthServices{
         password: password
     );
     Get.snackbar('Success','User logged in successfully.');
-    Get.to(() => HomeScreen());
+    Get.to(() => BottomNavHome());
   }on FirebaseAuthException catch (e) {
     debugPrint('Login Firebase Error: ${e.code}');
     debugPrint('Message: ${e.message}');
