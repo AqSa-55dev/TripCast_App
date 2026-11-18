@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:trip_cast/services/local_storage/local_storage.dart';
+import 'package:trip_cast/services/local_storage/local_storage_keys.dart';
 
 import '../../view/screens/auth/login_signup_screen.dart';
 import '../../view/screens/main_screens/bottom_nav_screens/home_screen.dart';
@@ -17,7 +19,13 @@ class FirebaseAuthServices{
       email: emailAddress,
       password: password,
     );
+
     String uid=credential.user!.uid;
+
+    await LocalStorage.saveData(
+      key: LocalStorageKeys.userId,
+      value: uid,
+    );
     FirebaseFirestore.instance.collection('users').doc(uid).set({
       'uid':uid,
       'name':name,
@@ -61,6 +69,10 @@ class FirebaseAuthServices{
     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailAddress,
         password: password
+    );
+    await LocalStorage.saveData(
+      key: LocalStorageKeys.userId,
+      value: credential.user!.uid,
     );
     Get.snackbar('Success','User logged in successfully.');
     Get.to(() => HomeScreen());

@@ -1,14 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
-
+import '../../../services/local_storage/local_storage.dart';
+import '../../../services/local_storage/local_storage_keys.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import 'bottom_nav_screens/bottom_nav_home.dart';
+
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -17,29 +18,46 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
 
-    String accessToken =LocalStorage.getData(key: LocalStorageKeys.accessToken);
+    String userId = LocalStorage.getData(
+      key: LocalStorageKeys.userId,
+    ) ??
+        "";
+
     _timer = Timer(
-        const Duration(milliseconds: 2500),
-            () {
-          if (accessToken=="") {
-            Get.offAll(() =>  LoginSignupScreen());}
-          else{
-            Get.offAll(() =>  BottomNavHome());}
-        });
+      const Duration(seconds: 3),
+          () {
+        if (!mounted) return;
+
+        if (userId == "") {
+          Get.offAll(
+                () => LoginSignupScreen(),
+            transition: Transition.noTransition,
+            duration: Duration.zero,
+          );
+        } else {
+          Get.offAll(
+                () => BottomNavHome(),
+            transition: Transition.noTransition,
+            duration: Duration.zero,
+          );
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    _controller.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

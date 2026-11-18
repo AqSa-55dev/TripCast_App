@@ -6,7 +6,7 @@ import '../../utils/app_colors.dart';
 
 
 class CustomTextField extends StatelessWidget {
-  final String hintText;
+  final String? hintText;
   final IconData? suffixIcon;
   final IconData? prefixIcon;
   final void Function()? onSuffixTap;
