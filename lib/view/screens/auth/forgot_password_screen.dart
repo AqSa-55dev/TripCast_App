@@ -6,6 +6,8 @@ import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/screens/auth/check_your_email_screen.dart';
 import 'package:get/get.dart';
 
+import '../../components/custom_small_circle_button.dart';
+
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
@@ -96,23 +98,8 @@ class _ForgetPasswordState extends State<ForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(10),
-                height: 44.h,
-                width: 44.w,
-                decoration: BoxDecoration(
-                  color: AppColors.pureWhite,
-                  shape: BoxShape.circle,
-                ),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.chevron_left_outlined,
-                    color: AppColors.ink,
-                    size: 25,
-                  ),
-                ),
-              ),
+              CustomSmallCircleButton(isIcon: true, icon: Icons.arrow_back_ios_new_outlined,iconColor: AppColors.ink,onButtonTap: (){Get.back();},),
+
 
               15.verticalSpace,
 

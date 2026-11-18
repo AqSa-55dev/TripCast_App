@@ -22,13 +22,13 @@ class CustomSmallCircleButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.pureWhite,
           shape: BoxShape.circle,boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.12), // Light, subtle shadow
-            blurRadius: 12, // Softness of the shadow
-            spreadRadius: 1, // How far the shadow extends
-            offset: const Offset(0, 4), // Moves shadow 4px down
-          ),
-        ],
+        BoxShadow(
+        color: Colors.black.withValues(alpha: 0.12), // Light, subtle shadow
+        blurRadius: 12, // Softness of the shadow
+        spreadRadius: 1, // How far the shadow extends
+        offset: const Offset(0, 4), // Moves shadow 4px down
+      ),
+      ],
         ),
         child: Align(
           alignment: Alignment.center,

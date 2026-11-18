@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:trip_cast/services/local_storage/local_storage.dart';
 import 'package:trip_cast/services/local_storage/local_storage_keys.dart';
+import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/bottom_nav_home.dart';
 
 import '../../view/screens/auth/login_signup_screen.dart';
 import '../../view/screens/main_screens/bottom_nav_screens/home_screen.dart';
@@ -19,7 +20,6 @@ class FirebaseAuthServices{
       email: emailAddress,
       password: password,
     );
-
     String uid=credential.user!.uid;
 
     await LocalStorage.saveData(
@@ -27,12 +27,15 @@ class FirebaseAuthServices{
       value: uid,
     );
     FirebaseFirestore.instance.collection('users').doc(uid).set({
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'uid':uid,
       'name':name,
       'email':emailAddress,
       'createdAt':FieldValue.serverTimestamp(),
 
-    });Get.snackbar('Success','User account created successfully.');
+    });
+    debugPrint('User data saved successfully!');
+    Get.snackbar('Success','User account created successfully.');
     return credential;
 
   } on FirebaseAuthException catch (e) {
@@ -75,7 +78,7 @@ class FirebaseAuthServices{
       value: credential.user!.uid,
     );
     Get.snackbar('Success','User logged in successfully.');
-    Get.to(() => HomeScreen());
+    Get.to(() => BottomNavHome());
   }on FirebaseAuthException catch (e) {
     debugPrint('Login Firebase Error: ${e.code}');
     debugPrint('Message: ${e.message}');

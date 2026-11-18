@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -8,8 +9,6 @@ import '../../../services/local_storage/local_storage_keys.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import 'bottom_nav_screens/bottom_nav_home.dart';
-
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -18,7 +17,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   Timer? _timer;
 
   @override
@@ -55,9 +53,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _controller.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {

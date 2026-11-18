@@ -12,4 +12,7 @@ class AppAssets {
   static String OnboardingStep2='assets/images/03 · Onboarding step 2-selection.png';
   static String OnboardingStep3='assets/images/04 · Onboarding step 3-selection.png';
   static String currentLocationIcon="assets/icons/location-icon.png";
+  static String cloudIcon="assets/icons/cloud icon.png";
+  static String sunIcon="assets/icons/Sun icon.png";
+  static String StartingLocationIcon="assets/icons/starting location pin icon.png";
 }

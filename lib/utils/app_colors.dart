@@ -17,6 +17,7 @@ class AppColors {
   static final Color primarySoft_grey = Color(0xffE4EFFF);
   static final Color sky_grey = Color(0xffDCEBFF);
   static final Color soft_blue= Color(0xffBBD3F3);
+  static final Color veryLightBlue=Color(0xffF0F6FF);
   static final Color orange = Color(0xff8A5200);
   static final Color soft_orange = Color(0xffFFF0D1);
 
