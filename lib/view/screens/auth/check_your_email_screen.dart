@@ -1,7 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:trip_cast/utils/app_colors.dart';
+import 'package:trip_cast/view/components/custom_button.dart';
+
+import '../../components/custom_small_circle_button.dart';
 
 class CheckYourEmail extends StatelessWidget {
   const CheckYourEmail({super.key});
@@ -16,25 +21,8 @@ class CheckYourEmail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(30.r),
-                child: Container(
-                  height: 44.h,
-                  width: 44.w,
-                  decoration: BoxDecoration(
-                    color: AppColors.pureWhite,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.chevron_left,
-                      color: AppColors.ink,
-                      size: 25,
-                    ),
-                  ),
-                ),
-              ),
+              CustomSmallCircleButton(isIcon: true, icon: Icons.arrow_back_ios_new_outlined,iconColor: AppColors.ink,onButtonTap: (){Get.back();},),
+
 
               38.verticalSpace,
 
@@ -87,28 +75,7 @@ class CheckYourEmail extends StatelessWidget {
 
               16.verticalSpace,
 
-              InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(30.r),
-                child: Container(
-                  height: 48.h,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Back to login",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.pureWhite,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              Custombutton(buttonText: "Back to Login", buttonColor: AppColors.primary, TextColor: AppColors.pureWhite)
 
             ],
           ),

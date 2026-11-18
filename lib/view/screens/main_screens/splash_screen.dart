@@ -23,21 +23,21 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    String accessToken =LocalStorage.getData(key: LocalStorageKeys.accessToken);
-    _timer = Timer(
-        const Duration(milliseconds: 2500),
-            () {
-          if (accessToken=="") {
-            Get.offAll(() =>  LoginSignupScreen());}
-          else{
-            Get.offAll(() =>  BottomNavHome());}
-        });
+  //  String accessToken =LocalStorage.getData(key: LocalStorageKeys.accessToken);
+  //   _timer = Timer(
+  //       const Duration(milliseconds: 2500),
+  //           () {
+  //         if (accessToken=="") {
+  //           Get.offAll(() =>  LoginSignupScreen());}
+  //         else{
+  //           Get.offAll(() =>  BottomNavHome());}
+  //       });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    _controller.dispose();
+    //_controller.dispose();
     super.dispose();
   }
 

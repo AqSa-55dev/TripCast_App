@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:trip_cast/utils/app_assets.dart';
 import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/components/custom_button.dart';
 import 'package:trip_cast/view/components/custom_scaffold.dart';
 import 'package:trip_cast/view/components/custom_small_circle_button.dart';
+
+import '../notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icons.notifications_none_rounded,
                         iconColor: AppColors.ink,
                         size: 25,
+                      onButtonTap: (){Get.to(()=>NotificationsScreen());},
                       ),
                     CustomSmallCircleButton(isIcon: false,text: "H",)
       

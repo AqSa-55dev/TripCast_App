@@ -19,13 +19,15 @@ class FirebaseAuthServices{
       password: password,
     );
     String uid=credential.user!.uid;
-    FirebaseFirestore.instance.collection('users').doc(uid).set({
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'uid':uid,
       'name':name,
       'email':emailAddress,
       'createdAt':FieldValue.serverTimestamp(),
 
-    });Get.snackbar('Success','User account created successfully.');
+    });
+    debugPrint('User data saved successfully!');
+    Get.snackbar('Success','User account created successfully.');
     return credential;
 
   } on FirebaseAuthException catch (e) {
