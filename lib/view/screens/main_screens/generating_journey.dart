@@ -84,12 +84,12 @@ Widget progressItem(String title) {
                       height: 150.h,
                       width: 150.w,
                       child: CircularProgressIndicator(
-                        value: 0.35,
                         strokeWidth: 4.w,
-                        backgroundColor: AppColors.muted_grey.withValues(alpha: 0.1),
+                        backgroundColor:
+                        AppColors.muted_grey.withValues(alpha: 0.1),
                         color: AppColors.primary,
-                        ),
                       ),
+                    ),
                     Container(
                       height: 110.h,
                       width: 110.w,
