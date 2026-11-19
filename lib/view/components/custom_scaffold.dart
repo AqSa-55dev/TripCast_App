@@ -23,7 +23,8 @@ class CustomScaffold extends StatelessWidget {
             end: Alignment.bottomCenter,),
 
         ),
-        child: child,
+        child: Material(color: Colors.transparent,
+            child: child),
       ): body,
       floatingActionButton: floatingActionButton,
       bottomNavigationBar: bottomNavigationBar,
