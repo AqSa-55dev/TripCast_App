@@ -26,7 +26,7 @@ class FirebaseAuthServices{
       key: LocalStorageKeys.userId,
       value: uid,
     );
-    FirebaseFirestore.instance.collection('users').doc(uid).set({
+
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
       'uid':uid,
       'name':name,
