@@ -7,6 +7,7 @@ import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/components/custom_button.dart';
 import 'package:trip_cast/view/components/custom_scaffold.dart';
 import 'package:trip_cast/view/components/custom_small_circle_button.dart';
+import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/Explore_screen.dart';
 
 import '../notifications_screen.dart';
 
@@ -110,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                         ],),
                     ),
-                    Custombutton(buttonText: "Plan Journey", buttonColor: AppColors.primary, TextColor: AppColors.pureWhite,showBoxShadow: true,)
+                    Custombutton(buttonText: "Plan Journey", buttonColor: AppColors.primary, TextColor: AppColors.pureWhite,showBoxShadow: true,
+                    onButtonTap: (){Get.to(()=>ExploreScreen());},)
                   ],
                 ),
               ),

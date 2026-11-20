@@ -6,11 +6,13 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/components/custom_scaffold.dart';
+import 'package:trip_cast/view/screens/main_screens/choose_location.dart';
 
 import '../../../../controller/date_time_controller.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../components/custom_button.dart';
 import '../date_time_screen.dart';
+import '../generating_journey.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -78,46 +80,41 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ),
                         ),
 
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: AppColors.veryLightBlue,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppColors.sky_grey,
-                              width: 1,
+                        InkWell(onTap: (){Get.to(()=>ChooseLocation());},
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.veryLightBlue,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.sky_grey,
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            spacing: 5,
-                            children: [
-                              Image.asset(
-                                AppAssets.StartingLocationIcon,
-                                scale: 2,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "From",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.muted_grey,
+                            child: Row(
+                              spacing: 5,
+                              children: [
+                                Image.asset(
+                                  AppAssets.StartingLocationIcon,
+                                  scale: 2,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    Text(
+                                      "Lahore",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.ink,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    "Lahore",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.ink,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
@@ -130,47 +127,42 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ),
                         ),
 
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: AppColors.veryLightBlue,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppColors.sky_grey,
-                              width: 1,
+                        InkWell(onTap: (){Get.to(()=>ChooseLocation());},
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.veryLightBlue,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: AppColors.sky_grey,
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            spacing: 5,
-                            children: [
-                              Icon(
-                                Icons.location_pin,
-                                color: AppColors.ink,
-                                size: 14,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "To",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.muted_grey,
+                            child: Row(
+                              spacing: 5,
+                              children: [
+                                Icon(
+                                  Icons.location_pin,
+                                  color: AppColors.ink,
+                                  size: 14,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+
+                                    Text(
+                                      "Islamabad",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.ink,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    "Islamabad",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.ink,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -300,7 +292,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
           Custombutton(buttonText: "Generate Journey",
             buttonColor: AppColors.primary,
             TextColor: AppColors.pureWhite,
-            showBoxShadow: true,),
+            showBoxShadow: true,
+          onButtonTap: (){Get.to(()=>GeneratingJourney());},),
 
           ],
         ),
