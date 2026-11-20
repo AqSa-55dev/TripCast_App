@@ -27,15 +27,11 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await setup();
+
 
   runApp(const MyApp());
 }
 
-
-Future<void> setup() async {
-  MapboxOptions.setAccessToken("pk.eyJ1IjoidHJpcGNhc3QxMiIsImEiOiJjbXduNHc3ZHQwNXJ3MnpzYTkzanYyeWxrIn0.ytI4JMyKghtcFG8NuigqEg");
-}
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

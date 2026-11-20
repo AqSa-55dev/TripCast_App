@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
+import 'package:trip_cast/controller/choose_location_controller.dart';
 import 'package:trip_cast/view/components/custom_scaffold.dart';
 import 'package:trip_cast/view/components/custom_small_circle_button.dart';
 import 'package:trip_cast/view/components/custom_text_field.dart';
@@ -16,25 +16,34 @@ class ChooseLocation extends StatefulWidget {
   State<ChooseLocation> createState() => _ChooseLocationState();
 }
 
+
 class _ChooseLocationState extends State<ChooseLocation> {
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  ChooseLocationController citySearchController = Get.put(ChooseLocationController());
   TextEditingController searchController=TextEditingController();
 
-  final List<Map<String, dynamic>> places = [
-    {
-      "icon": AppAssets.locationIcon,
-      "iconBg": AppColors.soft_blue,
-      "iconColor": AppColors.primary,
-      "title": "Islamabad",
-      "subtitle": "Islamabad Capital Territory, Pakistan"
-    },
-    {
-      "icon": AppAssets.locationIcon,
-      "iconBg": AppColors.soft_blue,
-      "iconColor": AppColors.primary,
-      "title": "Islamabad International Airport",
-      "subtitle": "Airport, Islamabad"
-    },
-  ];
+  // final List<Map<String, dynamic>> places = [
+  //   {
+  //     "icon": AppAssets.locationIcon,
+  //     "iconBg": AppColors.soft_blue,
+  //     "iconColor": AppColors.primary,
+  //     "title": "Islamabad",
+  //     "subtitle": "Islamabad Capital Territory, Pakistan"
+  //   },
+  //   {
+  //     "icon": AppAssets.locationIcon,
+  //     "iconBg": AppColors.soft_blue,
+  //     "iconColor": AppColors.primary,
+  //     "title": "Islamabad International Airport",
+  //     "subtitle": "Airport, Islamabad"
+  //   },
+  // ];
 
   Widget placeCard({
     required String icon,
@@ -140,6 +149,13 @@ class _ChooseLocationState extends State<ChooseLocation> {
                   showBorder: true,
                   prefixIcon: Icons.search_rounded,
                   Controller: searchController,
+                  onChanged: (value) {
+                    if (value.trim().isNotEmpty) {
+                      citySearchController.getSearchCities(value.trim());
+                    } else {
+                      citySearchController.listOfSearchCities.clear();
+                    }
+                  },
                 ),
 
                 10.verticalSpace,
@@ -190,21 +206,43 @@ class _ChooseLocationState extends State<ChooseLocation> {
 
                 12.verticalSpace,
 
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: places.length,
-                  itemBuilder: (context, index) {
-                    final place = places[index];
-                    return placeCard(
-                      icon: place["icon"],
-                      iconBg: place["iconBg"],
-                      iconColor: place["iconColor"],
-                      title: place["title"],
-                      subtitle: place["subtitle"],
-                      onTap: () => Get.back(result: place["title"]),
+                Expanded(
+                  child: Obx(() {
+
+                    if (citySearchController.isLoading.value) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    if (citySearchController.listOfSearchCities.isEmpty) {
+                      return const SizedBox();
+                    }
+
+                    return ListView.builder(
+                      itemCount: citySearchController.listOfSearchCities.length,
+                      itemBuilder: (context, index) {
+
+                        final place = citySearchController.listOfSearchCities[index];
+
+                        return placeCard(
+                          icon: AppAssets.locationIcon,
+                          iconBg: AppColors.soft_blue,
+                          iconColor: AppColors.primary,
+                          title: place.name ?? "",
+                          subtitle: [
+                            if (place.admin1 != null && place.admin1!.isNotEmpty)
+                              place.admin1!,
+                            if (place.country != null && place.country!.isNotEmpty)
+                              place.country!,
+                          ].join(", "),
+                          onTap: () {
+                            Get.back(result: place);
+                          },
+                        );
+                      },
                     );
-                  },
+                  }),
                 ),
               ],
             ),
