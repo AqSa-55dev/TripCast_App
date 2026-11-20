@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
+import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
 import '../../../services/local_storage/local_storage.dart';
 import '../../../services/local_storage/local_storage_keys.dart';
 import '../../../utils/app_assets.dart';
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
         if (userId == "") {
           Get.offAll(
-                () => LoginSignupScreen(),
+                () => OnboardingScreen(),
             transition: Transition.noTransition,
             duration: Duration.zero,
           );

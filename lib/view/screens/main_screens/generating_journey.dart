@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:trip_cast/view/components/custom_button.dart';
+import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/Explore_screen.dart';
+import 'package:trip_cast/view/screens/main_screens/journey_map.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../components/custom_scaffold.dart';
@@ -61,12 +65,14 @@ Widget progressItem(String title) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    "cancle",
-                    style: TextStyle(
-                      color: AppColors.muted,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
+                  InkWell(onTap: (){Get.back();},
+                    child: Text(
+                      "cancel",
+                      style: TextStyle(
+                        color: AppColors.muted,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ],
@@ -169,7 +175,7 @@ Widget progressItem(String title) {
                 buttonColor: AppColors.primary,
                 TextColor: AppColors.pureWhite,
                 onButtonTap: (){
-                  // Get.to(()=>const PlanJourney());
+                  Get.to(()=>JourneyMap());
                 },
               ),
             ],

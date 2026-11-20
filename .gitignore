@@ -32,7 +32,10 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
-
+pubspec.yaml
+.env
+.env.*
+!.env.example
 
 # Symbolication related
 app.*.symbols
