@@ -239,7 +239,6 @@ class _ChooseLocationState extends State<ChooseLocation> {
                           ].join(", "),
                           onTap: () {
                             Get.back(result: place);
-                            // Get.to(() => ExploreScreen(),);
 
                           },
                         );

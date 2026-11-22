@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
@@ -30,6 +29,11 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  MapboxOptions.setAccessToken(
+      "pk.eyJ1IjoidHJpcGNhc3QxMiIsImEiOiJjbXduNHc3ZHQwNXJ3MnpzYTkzanYyeWxrIn0.ytI4JMyKghtcFG8NuigqEg"
+  );
+
   await GetStorage.init();
 
 

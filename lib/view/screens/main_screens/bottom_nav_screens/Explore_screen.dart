@@ -24,6 +24,22 @@ class ExploreScreen extends StatefulWidget {
 class _ExploreScreenState extends State<ExploreScreen> {
 
   final DateTimeController controller = Get.put(DateTimeController());
+  dynamic startingLocation = "Lahore";
+  dynamic destination = "Islamabad";
+
+  Future<void> chooseLocation(bool isStartingLocation) async {
+    final selectedPlace = await Get.to(() => const ChooseLocation());
+
+    if (selectedPlace != null && mounted) {
+      setState(() {
+        if (isStartingLocation) {
+          startingLocation = selectedPlace;
+        } else {
+          destination = selectedPlace;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +96,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ),
                         ),
 
-                        InkWell(onTap: (){Get.to(()=>ChooseLocation());},
+                        InkWell(
+                          onTap: () {
+                            chooseLocation(true);
+                          },
                           child: Container(
                             padding: EdgeInsets.all(8),
                             width: double.infinity,
@@ -104,7 +123,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                   children: [
 
                                     Text(
-                                      "Lahore",
+                                      startingLocation is String
+                                          ? startingLocation
+                                          : startingLocation.name ?? "",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
@@ -127,7 +148,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ),
                         ),
 
-                        InkWell(onTap: (){Get.to(()=>ChooseLocation());},
+                        InkWell(
+                          onTap: () {
+                            chooseLocation(false);
+                          },
                           child: Container(
                             padding: EdgeInsets.all(8),
                             width: double.infinity,
@@ -152,7 +176,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                   children: [
 
                                     Text(
-                                      "Islamabad",
+                                      destination is String
+                                          ? destination
+                                          : destination.name ?? "",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
