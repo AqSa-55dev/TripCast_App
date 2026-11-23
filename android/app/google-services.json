@@ -12,7 +12,12 @@
           "package_name": "com.example.trip_cast"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "978875684188-0k330m44jegt7n6r32ept7sm5ootgc8r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC2oyFKnUvokgIOe2ojje6S60s2dbAL5DM"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978875684188-0k330m44jegt7n6r32ept7sm5ootgc8r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "978875684188-7mgq35edarapqggpkjeun4u2bk7gqf95.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tripCast"
+              }
+            }
+          ]
         }
       }
     }

@@ -26,6 +26,9 @@ import 'package:get/get.dart';
 import 'package:trip_cast/view/screens/main_screens/splash_screen.dart';
 import 'dart:ui' as ui;
 import 'firebase_options.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,10 +43,33 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await setupFCM();
 
 
 
   runApp(const MyApp());
+}
+
+Future<void> setupFCM() async {
+  try {
+    final messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings =
+    await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    debugPrint("Permission: ${settings.authorizationStatus}");
+
+    String? token = await messaging.getToken();
+
+    debugPrint("FCM Token: $token");
+
+  } catch (e) {
+    debugPrint("FCM Error: $e");
+  }
 }
 
 class MyApp extends StatelessWidget {

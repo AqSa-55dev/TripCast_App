@@ -45,8 +45,7 @@ dependencies:
   cloud_firestore: ^7.0.0
   google_sign_in: ^7.2.0
   firebase_auth: 7.0.0
-  mapbox_maps_flutter: ^3.35.1
-  geolocator: ^14.1.2
+  calendar_date_picker2: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -74,7 +73,6 @@ flutter:
   assets:
      - assets/icons/
      - assets/images/
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

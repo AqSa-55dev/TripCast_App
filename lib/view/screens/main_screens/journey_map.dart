@@ -6,6 +6,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/components/custom_button.dart';
 import 'package:trip_cast/view/components/custom_status_badge.dart';
+import 'package:trip_cast/view/screens/main_screens/route_weather_screen.dart';
 
 import '../../components/custom_small_circle_button.dart';
 
@@ -160,6 +161,9 @@ class _JourneyMapState extends State<JourneyMap> {
                               buttonColor: AppColors.pureWhite,
                               TextColor: AppColors.primary,
                               BorderColor: AppColors.primary,
+                              onButtonTap: () {
+                                Get.to(() => const RouteWeatherScreen());
+                              },
                             ),
                             10.verticalSpace,
                             Custombutton(
