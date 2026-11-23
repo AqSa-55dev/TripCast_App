@@ -12,13 +12,17 @@ import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/Explore_s
 import '../notifications_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback onExploreTap;
+  const HomeScreen({super.key, required this.onExploreTap});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(isBackgroundGradient: true,
@@ -112,7 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],),
                     ),
                     Custombutton(buttonText: "Plan Journey", buttonColor: AppColors.primary, TextColor: AppColors.pureWhite,showBoxShadow: true,
-                    onButtonTap: (){Get.to(()=>ExploreScreen());},)
+                    onButtonTap: (){debugPrint("Plan Journey button pressed");
+                      widget.onExploreTap();},)
                   ],
                 ),
               ),

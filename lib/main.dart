@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:trip_cast/utils/mapbox_config.dart';
 import 'package:trip_cast/view/screens/auth/forgot_password_screen.dart';
 import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
 import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
@@ -20,16 +22,42 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+
+  MapboxOptions.setAccessToken(
+      MapboxConfig.accessToken
+  );
   await GetStorage.init();
 
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-
+  await setupFCM();
 
   runApp(const MyApp());
+}
+
+Future<void> setupFCM() async {
+  try {
+    final messaging = FirebaseMessaging.instance;
+
+    NotificationSettings settings =
+    await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    debugPrint("Permission: ${settings.authorizationStatus}");
+
+    String? token = await messaging.getToken();
+
+    debugPrint("FCM Token: $token");
+
+  } catch (e) {
+    debugPrint("FCM Error: $e");
+  }
 }
 
 class MyApp extends StatelessWidget {

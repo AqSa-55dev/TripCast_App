@@ -209,6 +209,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  firebase_messaging:
+    dependency: "direct main"
+    description:
+      name: firebase_messaging
+      sha256: b971abf6ca94426d4cfc7685d6f97a34d3e1c2fda8e21d0e923d61736a984774
+      url: "https://pub.dev"
+    source: hosted
+    version: "17.1.0"
+  firebase_messaging_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_messaging_platform_interface
+      sha256: d51e4d1d1b3f575b83d3eff908f567311792601caafb04e63aff2c6ba09b6079
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.12.0"
+  firebase_messaging_web:
+    dependency: transitive
+    description:
+      name: firebase_messaging_web
+      sha256: d519ccbf71ca759c4817ee2894960f7bfeb6568d8adef9ec8dbc4bea848b9e74
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
   fixnum:
     dependency: transitive
     description:
@@ -238,6 +262,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+  flutter_local_notifications:
+    dependency: "direct main"
+    description:
+      name: flutter_local_notifications
+      sha256: "7d37d69ded3028af4f22531a0097a3baa478a384dff2e23e873707c93df3b704"
+      url: "https://pub.dev"
+    source: hosted
+    version: "23.0.3"
+  flutter_local_notifications_linux:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_linux
+      sha256: bcbcf3c15e33b6866805092308f5f6ef27e1191874f6a92ef59213a0812a79a2
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.0"
+  flutter_local_notifications_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_platform_interface
+      sha256: "4a49db4ce3d633ebc85c85b5fa959572600ec10bd097419c454579444308a0a0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.0.0"
+  flutter_local_notifications_web:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_web
+      sha256: ef117694fbfcd82308ab0e324cfc9282fa50c192e24ec54a58173ae327ebc544
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  flutter_local_notifications_windows:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_windows
+      sha256: "8e80ac29433c71e267493b397457e3a8430c5c1d9c76bb58a6971c016cdba3d7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -532,34 +596,34 @@ packages:
     dependency: "direct main"
     description:
       name: mapbox_maps_flutter
-      sha256: "345c5afdadaceaf61183b1b3fd0d623b4d73aea588636b89168885c102597291"
+      sha256: b527c591c2983d11f4964899ca7a2eb7ee26f9e69c8fce899e6b364d4fc16f04
       url: "https://pub.dev"
     source: hosted
-    version: "3.35.1"
+    version: "3.36.0-rc.1"
   mapbox_maps_flutter_mobile:
     dependency: transitive
     description:
       name: mapbox_maps_flutter_mobile
-      sha256: "8776324540f775941eab18373f1399aa46d7add4ccc2321b88b245938eefae91"
+      sha256: "99b11872a15df45bb84d7236075abf12993f8810953519b373c4f90610c3bf30"
       url: "https://pub.dev"
     source: hosted
-    version: "3.35.1"
+    version: "3.36.0-rc.1"
   mapbox_maps_flutter_platform_interface:
     dependency: transitive
     description:
       name: mapbox_maps_flutter_platform_interface
-      sha256: "024a91188239d277b977fba74f267c52ad74a96df1dbaa7bab41e5d0595f0aa6"
+      sha256: c0366770c441400dd476cb4b3e412c3521eaeae9f197aaa7f8c74392098cb8ee
       url: "https://pub.dev"
     source: hosted
-    version: "3.35.1"
+    version: "3.36.0-rc.1"
   mapbox_maps_flutter_web:
     dependency: transitive
     description:
       name: mapbox_maps_flutter_web
-      sha256: "8a3ba794a0f73b92f0ed5469a30a1f66bb4ad768fad677b3269709343b2ce716"
+      sha256: faf4a31ca7e2a39677432fdf5a2d0c25c8db4cd24f9634834619758f53ffae84
       url: "https://pub.dev"
     source: hosted
-    version: "3.35.1"
+    version: "3.36.0-rc.1"
   matcher:
     dependency: transitive
     description:
@@ -789,6 +853,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.12"
+  timezone:
+    dependency: transitive
+    description:
+      name: timezone
+      sha256: "9f4e5a1a0e4fef7dd3424842c0575db01bfb7a11730e8d55753fcd5c5c98767b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.2"
   turf:
     dependency: transitive
     description:
