@@ -8,6 +8,7 @@ import 'package:trip_cast/view/components/custom_text_field.dart';
 
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
+import 'bottom_nav_screens/Explore_screen.dart';
 
 class ChooseLocation extends StatefulWidget {
   const ChooseLocation({super.key});
@@ -132,7 +133,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                     ),
                     10.horizontalSpace,
                     Text(
-                      "Choose destination",
+                      "Choose Location",
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.w800,
@@ -238,6 +239,7 @@ class _ChooseLocationState extends State<ChooseLocation> {
                           ].join(", "),
                           onTap: () {
                             Get.back(result: place);
+
                           },
                         );
                       },
