@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/components/custom_button.dart';
 import 'package:trip_cast/view/components/custom_status_badge.dart';
-import 'package:trip_cast/view/screens/main_screens/route_weather_screen.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:trip_cast/view/screens/main_screens/weather_on_route.dart';
 
 import '../../components/custom_small_circle_button.dart';
 
@@ -162,7 +162,7 @@ class _JourneyMapState extends State<JourneyMap> {
                               TextColor: AppColors.primary,
                               BorderColor: AppColors.primary,
                               onButtonTap: () {
-                                Get.to(() => const RouteWeatherScreen());
+                                Get.to(() => const WeatherOnRoute());
                               },
                             ),
                             10.verticalSpace,

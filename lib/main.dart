@@ -5,28 +5,11 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:trip_cast/view/screens/auth/forgot_password_screen.dart';
-import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
-import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
-import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/bottom_nav_home.dart';
-import 'package:trip_cast/view/screens/main_screens/date_time_screen.dart';
-import 'package:trip_cast/view/screens/main_screens/journey_map.dart';
-// import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:trip_cast/view/screens/auth/forgot_password_screen.dart';
-import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
-import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
-import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/bottom_nav_home.dart';
-import 'package:trip_cast/view/screens/main_screens/date_time_screen.dart';
-import 'package:trip_cast/view/screens/main_screens/journey_map.dart';
-import 'package:trip_cast/utils/app_colors.dart';
-import 'package:trip_cast/view/screens/main_screens/choose_location.dart';
-import 'package:trip_cast/view/screens/main_screens/generating_journey.dart';
-import 'package:trip_cast/view/screens/main_screens/notifications_screen.dart';
 import 'package:get/get.dart';
 import 'package:trip_cast/view/screens/main_screens/splash_screen.dart';
+import 'package:trip_cast/view/screens/main_screens/weather_on_route.dart';
 import 'dart:ui' as ui;
 import 'firebase_options.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 
@@ -94,7 +77,7 @@ class MyApp extends StatelessWidget {
           ),
 
 
-          home: SplashScreen(),
+          home: WeatherOnRoute(),
         );
       },
     );

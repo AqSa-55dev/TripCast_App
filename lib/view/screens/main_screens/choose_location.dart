@@ -5,10 +5,9 @@ import 'package:trip_cast/controller/choose_location_controller.dart';
 import 'package:trip_cast/view/components/custom_scaffold.dart';
 import 'package:trip_cast/view/components/custom_small_circle_button.dart';
 import 'package:trip_cast/view/components/custom_text_field.dart';
-
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
-import 'bottom_nav_screens/Explore_screen.dart';
+
 
 class ChooseLocation extends StatefulWidget {
   const ChooseLocation({super.key});
