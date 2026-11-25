@@ -7,6 +7,8 @@ import 'package:trip_cast/utils/app_colors.dart';
 import 'package:trip_cast/view/components/custom_small_circle_button.dart';
 
 import '../../components/custom_scaffold.dart';
+import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationsScreen extends StatefulWidget {
   NotificationsScreen({super.key});
@@ -17,6 +19,42 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   bool isAllRead = false;
+  StreamSubscription<RemoteMessage>? _messageSubscription;
+  @override
+  void initState() {
+    super.initState();
+
+    _messageSubscription =
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          final notification = message.notification;
+
+          if (notification == null || !mounted) return;
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    notification.title ?? 'New Notification',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(notification.body ?? ''),
+                ],
+              ),
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        });
+  }
+
+  @override
+  void dispose() {
+    _messageSubscription?.cancel();
+    super.dispose();
+  }
+
   final List<Map<String, dynamic>> todayNotifications = [
     {
       "icon": Icons.warning_amber_rounded,

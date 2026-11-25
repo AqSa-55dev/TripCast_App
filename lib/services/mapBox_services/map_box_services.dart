@@ -5,14 +5,13 @@ import 'package:http/http.dart' as http;
 import '../../model/route_details_model.dart';
 
 class MapboxService {
-  static const double startLongitude = 74.3587;
-  static const double startLatitude = 31.5204;
-
-  static const double endLongitude = 73.0479;
-  static const double endLatitude = 33.6844;
 
   Future<RouteDetails> getRoute({
     required String accessToken,
+    required double startLongitude,
+    required double startLatitude,
+    required double endLongitude,
+    required double endLatitude,
   }) async {
     final url = Uri.parse(
       'https://api.mapbox.com/directions/v5/mapbox/driving/'
@@ -28,28 +27,25 @@ class MapboxService {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      // Get the first route
+      if (data['routes'] == null || (data['routes'] as List).isEmpty) {
+        throw Exception('No route found between these locations.');
+      }
+
       final route = data['routes'][0];
 
-      // Get route coordinates
       final coordinates = route['geometry']['coordinates'];
 
       final routeCoordinates = List<List<double>>.from(
         coordinates.map(
-              (point) =>
-          List<double>.from(
+              (point) => List<double>.from(
             point.map((value) => (value as num).toDouble()),
           ),
         ),
       );
 
-      // Convert meters into kilometers
-      final distanceKm =
-      (route['distance'] / 1000).round();
+      final distanceKm = (route['distance'] / 1000).round();
 
-      // Convert seconds into hours and minutes
-      final totalMinutes =
-      (route['duration'] / 60).round();
+      final totalMinutes = (route['duration'] / 60).round();
 
       final hours = totalMinutes ~/ 60;
       final minutes = totalMinutes % 60;
@@ -73,4 +69,5 @@ class MapboxService {
       );
     }
   }
+
 }

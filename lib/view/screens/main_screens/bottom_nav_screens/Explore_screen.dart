@@ -9,6 +9,7 @@ import 'package:trip_cast/view/components/custom_scaffold.dart';
 import 'package:trip_cast/view/screens/main_screens/choose_location.dart';
 
 import '../../../../controller/date_time_controller.dart';
+import '../../../../model/city_search_model.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../components/custom_button.dart';
 import '../date_time_screen.dart';
@@ -319,7 +320,43 @@ class _ExploreScreenState extends State<ExploreScreen> {
             buttonColor: AppColors.primary,
             TextColor: AppColors.pureWhite,
             showBoxShadow: true,
-          onButtonTap: (){Get.to(()=>GeneratingJourney());},),
+            onButtonTap: () {
+              if (startingLocation is! Result ||
+                  destination is! Result) {
+                Get.snackbar(
+                  "Select locations",
+                  "Please select your starting city and destination.",
+                );
+                return;
+              }
+
+              final selectedDate = controller.selectedDate.value;
+              final selectedTime = controller.selectedTime.value;
+
+              if (selectedDate == null || selectedTime == null) {
+                Get.snackbar(
+                  "Select departure",
+                  "Please select your departure date and time.",
+                );
+                return;
+              }
+
+              final departureDateTime = DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+                selectedTime.hour,
+                selectedTime.minute,
+              );
+
+              Get.to(
+                    () => GeneratingJourney(
+                  startingLocation: startingLocation,
+                  destination: destination,
+                  departureDateTime: departureDateTime,
+                ),
+              );
+            },),
 
           ],
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/app_colors.dart';
 
@@ -35,7 +36,7 @@ class Custombutton extends StatelessWidget {
             ),
             child: Align(alignment: AlignmentGeometry.center,
               child: Text(buttonText, style: TextStyle(color: TextColor,
-                  fontSize: 19, fontWeight: FontWeight(700)),
+                  fontSize: 16.sp, fontWeight: FontWeight(700)),
               ),
             )),
       ),
