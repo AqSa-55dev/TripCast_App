@@ -15,4 +15,5 @@ class AppAssets {
   static String cloudIcon="assets/icons/cloud icon.png";
   static String sunIcon="assets/icons/Sun icon.png";
   static String StartingLocationIcon="assets/icons/starting location pin icon.png";
+  static String cloudRainIcon="assets/icons/rain_cloud.png";
 }

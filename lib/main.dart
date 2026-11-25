@@ -6,7 +6,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:get/get.dart';
+import 'package:trip_cast/view/screens/main_screens/journey_map.dart';
 import 'package:trip_cast/view/screens/main_screens/splash_screen.dart';
+import 'package:trip_cast/view/screens/main_screens/stop_forecast.dart';
 import 'package:trip_cast/view/screens/main_screens/weather_on_route.dart';
 import 'dart:ui' as ui;
 import 'firebase_options.dart';
@@ -77,7 +79,7 @@ class MyApp extends StatelessWidget {
           ),
 
 
-          home: WeatherOnRoute(),
+          home: SplashScreen(),
         );
       },
     );
