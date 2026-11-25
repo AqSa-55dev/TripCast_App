@@ -5,12 +5,22 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:trip_cast/view/components/custom_button.dart';
 import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/Explore_screen.dart';
 import 'package:trip_cast/view/screens/main_screens/journey_map.dart';
+import '../../../model/city_search_model.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../components/custom_scaffold.dart';
 
 class GeneratingJourney extends StatefulWidget {
-  const GeneratingJourney({super.key});
+  final Result startingLocation;
+  final Result destination;
+  final DateTime departureDateTime;
+
+  const GeneratingJourney({
+    super.key,
+    required this.startingLocation,
+    required this.destination,
+    required this.departureDateTime,
+  });
 
   @override
   State<GeneratingJourney> createState() => _GeneratingJourneyState();
@@ -174,8 +184,14 @@ Widget progressItem(String title) {
                 buttonText: "View Journey",
                 buttonColor: AppColors.primary,
                 TextColor: AppColors.pureWhite,
-                onButtonTap: (){
-                  Get.to(()=>JourneyMap());
+                onButtonTap: () {
+                  Get.to(
+                        () => JourneyMap(
+                      startingLocation: widget.startingLocation,
+                      destination: widget.destination,
+                      departureDateTime: widget.departureDateTime,
+                    ),
+                  );
                 },
               ),
             ],

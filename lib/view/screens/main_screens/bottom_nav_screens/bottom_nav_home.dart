@@ -17,13 +17,21 @@ class _BottomNavHomeState extends State<BottomNavHome> {
     setState(() {
       _selectedIndex = index;
     });
+
+    debugPrint("Selected index: $_selectedIndex");
   }
-  List listOfScreens = [
-    HomeScreen(),
-    ExploreScreen(),
-  ];
+
   @override
   Widget build(BuildContext context) {
+    final List<Widget> listOfScreens = [
+      HomeScreen(
+        onExploreTap: () {
+          debugPrint("Callback received in BottomNavHome");
+          _onItemTapped(1);
+        },
+      ),
+      ExploreScreen(),
+    ];
     return Scaffold(
       backgroundColor: AppColors.pureWhite,
       body: listOfScreens[_selectedIndex],
