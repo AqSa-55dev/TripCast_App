@@ -20,6 +20,15 @@ class ApiEndpoints {
     return "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m,precipitation_probability,weather_code&timezone=auto";
   }
 
+  // Reverse geocoding endpoint to get city/town names for intermediate route stops
+  static String reverseGeocodeUrl({
+    required double latitude,
+    required double longitude,
+    required String accessToken,
+  }) {
+    return "https://api.mapbox.com/geocoding/v5/mapbox.places/$longitude,$latitude.json?types=place,locality&limit=1&access_token=$accessToken";
+  }
+
 
 
 }

@@ -14,6 +14,7 @@ class WeatherStopCard extends StatelessWidget {
   final IconData weatherIcon;
   final Color cardColor;
   final Color iconColor;
+  final Color? borderColor;
 
   const WeatherStopCard({
     super.key,
@@ -27,6 +28,7 @@ class WeatherStopCard extends StatelessWidget {
     required this.weatherIcon,
     required this.cardColor,
     required this.iconColor,
+    this.borderColor,
   });
 
   @override
@@ -38,8 +40,8 @@ class WeatherStopCard extends StatelessWidget {
         color: cardColor,
         borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
-          color: AppColors.border_grey,
-          width: 1,
+          color: borderColor ?? AppColors.border_grey,
+          width: 1.2,
         ),
       ),
       child: Column(
@@ -116,7 +118,7 @@ class WeatherStopCard extends StatelessWidget {
           vertical: 10.h,
         ),
         decoration: BoxDecoration(
-          color: AppColors.pureWhite.withOpacity(0.85),
+          color: AppColors.pureWhite.withValues(alpha: 0.85),
           borderRadius: BorderRadius.circular(14.r),
         ),
         child: Column(

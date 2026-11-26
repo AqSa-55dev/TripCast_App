@@ -19,9 +19,16 @@ class AppColors {
   static final Color soft_blue= Color(0xffBBD3F3);
   static final Color veryLightBlue=Color(0xffF0F6FF);
   static final Color orange = Color(0xff8A5200);
+  static final Color orange_yellow = Color(0xffE9A323);
   static final Color soft_orange = Color(0xffFFF0D1);
   static final Color borderBlue = Color(0xffB5CFF3);
   static final Color transparentBlue = Color(0xffE1EDFF);
+  static final Color warmYellow = Color(0xffFFF8DF);
+  static final Color warm_yellow_border = Color(0xFFFFE0A3);
+  static final Color greyBlue = Color(0xffF0F4FA);
+  static final Color softGreyBlueBorder = Color(0xffE2EBF5);
+  static final Color softBlueBorder = Color(0xffC7DBF5);
+  static final Color slate_blue = Color(0xff6387B4);
 
 
 }
