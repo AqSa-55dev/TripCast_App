@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trip_cast/utils/app_colors.dart';
+import 'package:trip_cast/utils/app_assets.dart';
 
 class WeatherStopCard extends StatelessWidget {
   final String cityName;
@@ -11,7 +12,7 @@ class WeatherStopCard extends StatelessWidget {
   final String rain;
   final String humidity;
   final String wind;
-  final IconData weatherIcon;
+  final String weatherIconAsset;
   final Color cardColor;
   final Color iconColor;
   final Color? borderColor;
@@ -25,7 +26,7 @@ class WeatherStopCard extends StatelessWidget {
     required this.rain,
     required this.humidity,
     required this.wind,
-    required this.weatherIcon,
+    required this.weatherIconAsset,
     required this.cardColor,
     required this.iconColor,
     this.borderColor,
@@ -51,14 +52,14 @@ class WeatherStopCard extends StatelessWidget {
               Container(
                 height: 58.h,
                 width: 58.w,
+                padding: EdgeInsets.all(10.w),
                 decoration: BoxDecoration(
                   color: AppColors.pureWhite,
                   borderRadius: BorderRadius.circular(18.r),
                 ),
-                child: Icon(
-                  weatherIcon,
-                  color: iconColor,
-                  size: 32.sp,
+                child: Image.asset(
+                  weatherIconAsset,
+                  fit: BoxFit.contain,
                 ),
               ),
               12.horizontalSpace,

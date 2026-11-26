@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+
 import '../../../controller/weather_controller.dart';
 import '../../../model/city_search_model.dart';
+import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../components/custom_button.dart';
 import '../../components/custom_scaffold.dart';
@@ -41,7 +43,8 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
   @override
   void initState() {
     super.initState();
-    // Fetch live weather for dynamic route stops from JourneyMap
+
+    // Fetch weather for all stops along the route
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.getRouteWeather(
         startingLocation: widget.startingLocation,
@@ -55,8 +58,9 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate day offset from today for accurate Open-Meteo hourly indexing
+    // Calculate hourly forecast index from departure date
     final DateTime now = DateTime.now();
+
     final int daysOffset = DateTime(
       widget.departureDateTime.year,
       widget.departureDateTime.month,
@@ -72,9 +76,8 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
     return CustomScaffold(
       isBackgroundGradient: true,
       child: SafeArea(
-        // Wrap with Obx for reactive state updates
         child: Obx(() {
-          // Loading state while API is fetching data
+          // Loading state
           if (controller.isLoading.value) {
             return Center(
               child: Column(
@@ -97,13 +100,13 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
             );
           }
 
-          // Extract hourly rain probabilities from origin city
+          // Get hourly rain probability from the first stop
           final List<int> hourlyRainList =
-              controller.listOfStopsWeather.isNotEmpty
-                  ? (controller.listOfStopsWeather.first.hourly
-                          ?.precipitationProbability ??
-                      [])
-                  : [];
+          controller.listOfStopsWeather.isNotEmpty
+              ? (controller.listOfStopsWeather.first.hourly
+              ?.precipitationProbability ??
+              [])
+              : [];
 
           return SingleChildScrollView(
             child: Padding(
@@ -114,7 +117,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // App Bar (Back button + Title)
+                  // App Bar
                   Row(
                     children: [
                       CustomSmallCircleButton(
@@ -141,7 +144,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
                   20.verticalSpace,
 
-                  // Dynamic Route Summary Banner
+                  // Route Summary Banner
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(
@@ -189,7 +192,9 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              widget.distance.isEmpty ? '--' : widget.distance,
+                              widget.distance.isEmpty
+                                  ? '--'
+                                  : widget.distance,
                               style: TextStyle(
                                 fontSize: 17.sp,
                                 fontWeight: FontWeight.w800,
@@ -198,7 +203,9 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                             ),
                             5.verticalSpace,
                             Text(
-                              widget.duration.isEmpty ? '--' : widget.duration,
+                              widget.duration.isEmpty
+                                  ? '--'
+                                  : widget.duration,
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: AppColors.pureWhite,
@@ -212,7 +219,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
                   20.verticalSpace,
 
-                  // Chance of rain by hour (Dynamic ListView.separated)
+                  // Chance of Rain by Hour
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(16.w),
@@ -245,7 +252,6 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
                         16.verticalSpace,
 
-                        // Dynamic 6-hour rain forecast starting from departure hour
                         SizedBox(
                           height: 138.h,
                           child: ListView.separated(
@@ -253,25 +259,32 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                             physics: const BouncingScrollPhysics(),
                             itemCount: 6,
                             separatorBuilder: (context, index) =>
-                                10.horizontalSpace,
+                            10.horizontalSpace,
                             itemBuilder: (context, index) {
-                              final int targetIndex = startHourIndex + index;
-                              final int rainValue =
-                                  (targetIndex < hourlyRainList.length)
-                                      ? hourlyRainList[targetIndex]
-                                      : 0;
-                              final double barHeight =
-                                  (rainValue * 0.65).clamp(6.0, 68.0);
+                              final int targetIndex =
+                                  startHourIndex + index;
 
-                              final DateTime slotTime = widget.departureDateTime
-                                  .add(Duration(hours: index));
+                              final int rainValue =
+                              targetIndex < hourlyRainList.length
+                                  ? hourlyRainList[targetIndex]
+                                  : 0;
+
+                              final double barHeight =
+                              (rainValue * 0.65).clamp(6.0, 68.0);
+
+                              final DateTime slotTime =
+                              widget.departureDateTime.add(
+                                Duration(hours: index),
+                              );
+
                               final String hourLabel =
-                                  DateFormat('h a').format(slotTime);
+                              DateFormat('h a').format(slotTime);
 
                               return SizedBox(
                                 width: 42.w,
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       "$rainValue%",
@@ -281,6 +294,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                                         color: AppColors.ink,
                                       ),
                                     ),
+
                                     6.verticalSpace,
 
                                     Container(
@@ -290,7 +304,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                                       decoration: BoxDecoration(
                                         color: AppColors.background,
                                         borderRadius:
-                                            BorderRadius.circular(12.r),
+                                        BorderRadius.circular(12.r),
                                       ),
                                       child: Container(
                                         height: barHeight.h,
@@ -300,7 +314,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                                               ? AppColors.primary
                                               : AppColors.soft_blue,
                                           borderRadius:
-                                              BorderRadius.circular(12.r),
+                                          BorderRadius.circular(12.r),
                                         ),
                                       ),
                                     ),
@@ -338,48 +352,64 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
                   14.verticalSpace,
 
-                  // Dynamic Stops along the way list
+                  // Dynamic Stops List
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: controller.listOfStopsWeather.length,
-                    separatorBuilder: (context, index) => 14.verticalSpace,
+                    separatorBuilder: (context, index) =>
+                    14.verticalSpace,
                     itemBuilder: (context, index) {
-                      final stopWeather = controller.listOfStopsWeather[index];
-                      final stopInfo = controller.dynamicRouteStops[index];
-                      final int code = stopWeather.current?.weatherCode ?? 0;
+                      final stopWeather =
+                      controller.listOfStopsWeather[index];
 
-                      final hourlyRain =
-                          stopWeather.hourly?.precipitationProbability ?? [];
-                      final int stopHourIndex = startHourIndex + index;
+                      final stopInfo =
+                      controller.dynamicRouteStops[index];
+
+                      // Get weather condition code
+                      final int code =
+                          stopWeather.current?.weatherCode ?? 0;
+
+                      // Get rain probability
+                      final hourlyRain = stopWeather
+                          .hourly?.precipitationProbability ??
+                          [];
+
+                      final int stopHourIndex =
+                          startHourIndex + index;
+
                       final int rainChance =
-                          (stopHourIndex < hourlyRain.length)
-                              ? hourlyRain[stopHourIndex]
-                              : 0;
+                      stopHourIndex < hourlyRain.length
+                          ? hourlyRain[stopHourIndex]
+                          : 0;
 
+                      // Get temperature
                       final double temp =
-                          stopWeather.current?.temperature2M?.toDouble() ?? 20.0;
-                      final String arrivalTime = stopInfo['time'] ?? '';
+                          stopWeather.current?.temperature2M
+                              ?.toDouble() ??
+                              20.0;
 
-                      // Calculate unified weather style based strictly on actual weather & temperature
+                      final String arrivalTime =
+                          stopInfo['time'] ?? '';
+
+                      // Get card style according to weather condition
                       final style = _calculateStopStyle(
                         code: code,
                         rainChance: rainChance,
-                        temp: temp,
-                        time: arrivalTime,
                       );
 
                       return GestureDetector(
                         onTap: () {
                           Get.to(
-                            () => StopForecast(
+                                () => StopForecast(
                               stopName: stopInfo['city'] ?? '',
                               stopIndex: index + 1,
-                              totalStops:
-                                  controller.listOfStopsWeather.length,
+                              totalStops: controller
+                                  .listOfStopsWeather.length,
                               arrivalTime: arrivalTime,
                               weatherModel: stopWeather,
-                              departureDateTime: widget.departureDateTime,
+                              departureDateTime:
+                              widget.departureDateTime,
                             ),
                           );
                         },
@@ -390,10 +420,10 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                           temperature: "${temp.round()}°",
                           rain: "$rainChance%",
                           humidity:
-                              "${stopWeather.current?.relativeHumidity2M ?? 0}%",
+                          "${stopWeather.current?.relativeHumidity2M ?? 0}%",
                           wind:
-                              "${stopWeather.current?.windSpeed10M?.round() ?? 0} km/h",
-                          weatherIcon: style.icon,
+                          "${stopWeather.current?.windSpeed10M?.round() ?? 0} km/h",
+                          weatherIconAsset: style.iconAsset,
                           cardColor: style.cardColor,
                           borderColor: style.borderColor,
                           iconColor: style.iconColor,
@@ -428,47 +458,48 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
     );
   }
 
+  // Weather card styling based on weather condition code
   _StopStyle _calculateStopStyle({
     required int code,
     required int rainChance,
-    required double temp,
-    required String time,
   }) {
-    // Check if arrival time is night/early morning (e.g. 11 PM, 3 AM)
-    final bool isNight = (time.contains("PM") &&
-            (time.startsWith("8") ||
-                time.startsWith("9") ||
-                time.startsWith("10") ||
-                time.startsWith("11"))) ||
-        (time.contains("AM") &&
-            (time.startsWith("12") ||
-                time.startsWith("1") ||
-                time.startsWith("2") ||
-                time.startsWith("3") ||
-                time.startsWith("4") ||
-                time.startsWith("5")));
-
-    // Rain / Storm
-    if (rainChance >= 50 || (code >= 51 && code <= 99)) {
-      final String label =
-          (rainChance >= 75 || code >= 95) ? "Heavy rain" : "Light rain";
+    // Thunderstorm
+    if (code == 95 || code == 96 || code == 99) {
       return _StopStyle(
-        condition: label,
-        icon: Icons.grain_rounded,
+        condition: "Thunderstorm",
+        iconAsset: AppAssets.cloudRainIcon,
         iconColor: AppColors.primary,
         cardColor: AppColors.primarySoft_grey,
         borderColor: AppColors.softBlueBorder,
       );
     }
 
-    // Cold / Chilly
-    if (temp <= 8.0) {
+    // Heavy Rain
+    if (code == 65 ||
+        code == 67 ||
+        code == 82 ||
+        rainChance >= 75) {
       return _StopStyle(
-        condition: isNight ? "Cold · Clear" : "Chilly",
-        icon: Icons.ac_unit_rounded,
-        iconColor: AppColors.slate_blue,
-        cardColor: AppColors.greyBlue,
-        borderColor: AppColors.softGreyBlueBorder,
+        condition: "Heavy rain",
+        iconAsset: AppAssets.cloudRainIcon,
+        iconColor: AppColors.primary,
+        cardColor: AppColors.primarySoft_grey,
+        borderColor: AppColors.softBlueBorder,
+      );
+    }
+
+    // Light Rain
+    if ((code >= 51 && code <= 57) ||
+        (code >= 61 && code <= 63) ||
+        code == 66 ||
+        code == 80 ||
+        code == 81) {
+      return _StopStyle(
+        condition: "Light rain",
+        iconAsset: AppAssets.cloudRainIcon,
+        iconColor: AppColors.primary,
+        cardColor: AppColors.primarySoft_grey,
+        borderColor: AppColors.softBlueBorder,
       );
     }
 
@@ -476,19 +507,42 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
     if (code == 45 || code == 48) {
       return _StopStyle(
         condition: "Foggy",
-        icon: Icons.cloud,
+        iconAsset: AppAssets.cloudIcon,
         iconColor: AppColors.muted_grey,
         cardColor: AppColors.greyBlue,
         borderColor: AppColors.softGreyBlueBorder,
       );
     }
 
-    // Cloudy / Partly Cloudy
-    if (code >= 1 && code <= 3 || rainChance >= 20) {
-      final String label = code == 3 ? "Cloudy" : "Partly cloudy";
+    // Snow
+    if ((code >= 71 && code <= 77) ||
+        code == 85 ||
+        code == 86) {
       return _StopStyle(
-        condition: label,
-        icon: Icons.wb_cloudy_rounded,
+        condition: "Snow",
+        iconAsset: AppAssets.cloudIcon,
+        iconColor: AppColors.slate_blue,
+        cardColor: AppColors.greyBlue,
+        borderColor: AppColors.softGreyBlueBorder,
+      );
+    }
+
+    // Cloudy
+    if (code == 3) {
+      return _StopStyle(
+        condition: "Cloudy",
+        iconAsset: AppAssets.cloudIcon,
+        iconColor: AppColors.slate_blue,
+        cardColor: AppColors.greyBlue,
+        borderColor: AppColors.softGreyBlueBorder,
+      );
+    }
+
+    // Partly Cloudy
+    if (code == 1 || code == 2) {
+      return _StopStyle(
+        condition: "Partly cloudy",
+        iconAsset: AppAssets.partlyCloudyIcon,
         iconColor: AppColors.slate_blue,
         cardColor: AppColors.greyBlue,
         borderColor: AppColors.softGreyBlueBorder,
@@ -497,26 +551,26 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
     // Sunny / Clear
     return _StopStyle(
-      condition: isNight ? "Clear" : "Sunny",
-      icon: isNight ? Icons.nightlight_round : Icons.wb_sunny_rounded,
-      iconColor: isNight? AppColors.slate_blue : AppColors.orange_yellow,
-      cardColor: isNight? AppColors.transparentBlue :AppColors.warmYellow,
-      borderColor: isNight? AppColors.slate_blue :AppColors.warm_yellow_border,
+      condition: "Sunny",
+      iconAsset: AppAssets.sunIcon,
+      iconColor: AppColors.orange_yellow,
+      cardColor: AppColors.warmYellow,
+      borderColor: AppColors.warm_yellow_border,
     );
   }
 }
 
-// Unified class for consistent stop card visuals
+// Weather style for each stop card
 class _StopStyle {
   final String condition;
-  final IconData icon;
+  final String iconAsset;
   final Color iconColor;
   final Color cardColor;
   final Color borderColor;
 
   _StopStyle({
     required this.condition,
-    required this.icon,
+    required this.iconAsset,
     required this.iconColor,
     required this.cardColor,
     required this.borderColor,
