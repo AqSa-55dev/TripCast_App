@@ -7,6 +7,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../../../controller/weather_controller.dart';
 import '../../../model/city_search_model.dart';
+import '../../../model/weather_model.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../components/custom_button.dart';
@@ -44,7 +45,6 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
   void initState() {
     super.initState();
 
-    // Fetch weather for all stops along the route
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.getRouteWeather(
         startingLocation: widget.startingLocation,
@@ -56,28 +56,191 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
     });
   }
 
+  // Convert route duration, for example "1h 27m", into minutes
+  int _getDurationInMinutes() {
+    int totalMinutes = 0;
+
+    final hMatch = RegExp(r'(\d+)\s*h').firstMatch(widget.duration);
+    final mMatch = RegExp(r'(\d+)\s*m').firstMatch(widget.duration);
+
+    if (hMatch != null) {
+      totalMinutes += int.parse(hMatch.group(1)!) * 60;
+    }
+
+    if (mMatch != null) {
+      totalMinutes += int.parse(mMatch.group(1)!);
+    }
+
+    return totalMinutes > 0 ? totalMinutes : 60;
+  }
+
+  // Calculate the estimated arrival date and time for each stop
+  DateTime _getStopArrivalTime(int stopIndex) {
+    final int totalStops = controller.listOfStopsWeather.length;
+
+    if (totalStops <= 1) {
+      return widget.departureDateTime;
+    }
+
+    final int totalMinutes = _getDurationInMinutes();
+
+    final int minutesAtStop =
+    (totalMinutes * stopIndex / (totalStops - 1)).round();
+
+    return widget.departureDateTime.add(
+      Duration(minutes: minutesAtStop),
+    );
+  }
+
+  // Find the matching hourly forecast using date and hour
+  int _findHourlyIndex(
+      WeatherModel weather,
+      DateTime targetTime,
+      ) {
+    final List<String> hourlyTimes = weather.hourly?.time ?? [];
+
+    for (int i = 0; i < hourlyTimes.length; i++) {
+      try {
+        final DateTime forecastTime = DateTime.parse(hourlyTimes[i]);
+
+        if (forecastTime.year == targetTime.year &&
+            forecastTime.month == targetTime.month &&
+            forecastTime.day == targetTime.day &&
+            forecastTime.hour == targetTime.hour) {
+          return i;
+        }
+      } catch (e) {
+        // Skip an invalid forecast time
+      }
+    }
+
+    return -1;
+  }
+
+  // Get a safe rain percentage for the selected hour
+  String _getRainChance(WeatherModel weather, int hourIndex) {
+    final rainList =
+        weather.hourly?.precipitationProbability ?? [];
+
+    if (hourIndex < 0 || hourIndex >= rainList.length) {
+      return '--';
+    }
+
+    return '${rainList[hourIndex]}%';
+  }
+
+  // Get weather condition and card styling
+  _StopStyle _calculateStopStyle(int code) {
+    // Thunderstorm
+    if (code == 95 || code == 96 || code == 99) {
+      return _StopStyle(
+        condition: "Thunderstorm",
+        iconAsset: AppAssets.cloudRainIcon,
+        iconColor: AppColors.primary,
+        cardColor: AppColors.primarySoft_grey,
+        borderColor: AppColors.softBlueBorder,
+      );
+    }
+
+    // Heavy rain
+    if (code == 65 || code == 67 || code == 82) {
+      return _StopStyle(
+        condition: "Heavy rain",
+        iconAsset: AppAssets.cloudRainIcon,
+        iconColor: AppColors.primary,
+        cardColor: AppColors.primarySoft_grey,
+        borderColor: AppColors.softBlueBorder,
+      );
+    }
+
+    // Light rain and drizzle
+    if ((code >= 51 && code <= 57) ||
+        (code >= 61 && code <= 63) ||
+        code == 66 ||
+        code == 80 ||
+        code == 81) {
+      return _StopStyle(
+        condition: "Light rain",
+        iconAsset: AppAssets.cloudRainIcon,
+        iconColor: AppColors.primary,
+        cardColor: AppColors.primarySoft_grey,
+        borderColor: AppColors.softBlueBorder,
+      );
+    }
+
+    // Fog
+    if (code == 45 || code == 48) {
+      return _StopStyle(
+        condition: "Foggy",
+        iconAsset: AppAssets.cloudIcon,
+        iconColor: AppColors.muted_grey,
+        cardColor: AppColors.greyBlue,
+        borderColor: AppColors.softGreyBlueBorder,
+      );
+    }
+
+    // Snow
+    if ((code >= 71 && code <= 77) ||
+        code == 85 ||
+        code == 86) {
+      return _StopStyle(
+        condition: "Snow",
+        iconAsset: AppAssets.cloudIcon,
+        iconColor: AppColors.slate_blue,
+        cardColor: AppColors.greyBlue,
+        borderColor: AppColors.softGreyBlueBorder,
+      );
+    }
+
+    // Cloudy
+    if (code == 3) {
+      return _StopStyle(
+        condition: "Cloudy",
+        iconAsset: AppAssets.cloudIcon,
+        iconColor: AppColors.slate_blue,
+        cardColor: AppColors.greyBlue,
+        borderColor: AppColors.softGreyBlueBorder,
+      );
+    }
+
+    // Partly cloudy
+    if (code == 1 || code == 2) {
+      return _StopStyle(
+        condition: "Partly cloudy",
+        iconAsset: AppAssets.partlyCloudyIcon,
+        iconColor: AppColors.slate_blue,
+        cardColor: AppColors.greyBlue,
+        borderColor: AppColors.softGreyBlueBorder,
+      );
+    }
+
+    // Clear weather
+    if (code == 0) {
+      return _StopStyle(
+        condition: "Clear",
+        iconAsset: AppAssets.sunIcon,
+        iconColor: AppColors.orange_yellow,
+        cardColor: AppColors.warmYellow,
+        borderColor: AppColors.warm_yellow_border,
+      );
+    }
+
+    // Unknown or unavailable forecast
+    return _StopStyle(
+      condition: "Forecast unavailable",
+      iconAsset: AppAssets.cloudIcon,
+      iconColor: AppColors.muted_grey,
+      cardColor: AppColors.greyBlue,
+      borderColor: AppColors.softGreyBlueBorder,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Calculate hourly forecast index from departure date
-    final DateTime now = DateTime.now();
-
-    final int daysOffset = DateTime(
-      widget.departureDateTime.year,
-      widget.departureDateTime.month,
-      widget.departureDateTime.day,
-    )
-        .difference(DateTime(now.year, now.month, now.day))
-        .inDays
-        .clamp(0, 6);
-
-    final int startHourIndex =
-        (daysOffset * 24) + widget.departureDateTime.hour;
-
     return CustomScaffold(
       isBackgroundGradient: true,
       child: SafeArea(
         child: Obx(() {
-          // Loading state
           if (controller.isLoading.value) {
             return Center(
               child: Column(
@@ -99,14 +262,6 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
               ),
             );
           }
-
-          // Get hourly rain probability from the first stop
-          final List<int> hourlyRainList =
-          controller.listOfStopsWeather.isNotEmpty
-              ? (controller.listOfStopsWeather.first.hourly
-              ?.precipitationProbability ??
-              [])
-              : [];
 
           return SingleChildScrollView(
             child: Padding(
@@ -144,7 +299,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
                   20.verticalSpace,
 
-                  // Route Summary Banner
+                  // Route Summary
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(
@@ -220,123 +375,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                   20.verticalSpace,
 
                   // Chance of Rain by Hour
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(16.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.pureWhite,
-                      borderRadius: BorderRadius.circular(24.r),
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Chance of rain by hour',
-                              style: TextStyle(
-                                fontSize: 15.sp,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.ink,
-                              ),
-                            ),
-                            Text(
-                              'Along your trip',
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                color: AppColors.muted,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        16.verticalSpace,
-
-                        SizedBox(
-                          height: 138.h,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: 6,
-                            separatorBuilder: (context, index) =>
-                            10.horizontalSpace,
-                            itemBuilder: (context, index) {
-                              final int targetIndex =
-                                  startHourIndex + index;
-
-                              final int rainValue =
-                              targetIndex < hourlyRainList.length
-                                  ? hourlyRainList[targetIndex]
-                                  : 0;
-
-                              final double barHeight =
-                              (rainValue * 0.65).clamp(6.0, 68.0);
-
-                              final DateTime slotTime =
-                              widget.departureDateTime.add(
-                                Duration(hours: index),
-                              );
-
-                              final String hourLabel =
-                              DateFormat('h a').format(slotTime);
-
-                              return SizedBox(
-                                width: 42.w,
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "$rainValue%",
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppColors.ink,
-                                      ),
-                                    ),
-
-                                    6.verticalSpace,
-
-                                    Container(
-                                      height: 70.h,
-                                      width: 36.w,
-                                      alignment: Alignment.bottomCenter,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.background,
-                                        borderRadius:
-                                        BorderRadius.circular(12.r),
-                                      ),
-                                      child: Container(
-                                        height: barHeight.h,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          color: rainValue >= 50
-                                              ? AppColors.primary
-                                              : AppColors.soft_blue,
-                                          borderRadius:
-                                          BorderRadius.circular(12.r),
-                                        ),
-                                      ),
-                                    ),
-
-                                    6.verticalSpace,
-
-                                    Text(
-                                      hourLabel,
-                                      style: TextStyle(
-                                        fontSize: 10.sp,
-                                        color: AppColors.muted,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildRainChart(),
 
                   24.verticalSpace,
 
@@ -352,7 +391,7 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
 
                   14.verticalSpace,
 
-                  // Dynamic Stops List
+                  // Weather Stops
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -366,37 +405,40 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                       final stopInfo =
                       controller.dynamicRouteStops[index];
 
-                      // Get weather condition code
-                      final int code =
-                          stopWeather.current?.weatherCode ?? 0;
-
-                      // Get rain probability
-                      final hourlyRain = stopWeather
-                          .hourly?.precipitationProbability ??
-                          [];
-
-                      final int stopHourIndex =
-                          startHourIndex + index;
-
-                      final int rainChance =
-                      stopHourIndex < hourlyRain.length
-                          ? hourlyRain[stopHourIndex]
-                          : 0;
-
-                      // Get temperature
-                      final double temp =
-                          stopWeather.current?.temperature2M
-                              ?.toDouble() ??
-                              20.0;
+                      // Get estimated arrival time at this stop
+                      final DateTime arrivalDateTime =
+                      _getStopArrivalTime(index);
 
                       final String arrivalTime =
-                          stopInfo['time'] ?? '';
+                      DateFormat('h:mm a').format(arrivalDateTime);
 
-                      // Get card style according to weather condition
-                      final style = _calculateStopStyle(
-                        code: code,
-                        rainChance: rainChance,
+                      // Find forecast for this exact hour
+                      final int hourIndex = _findHourlyIndex(
+                        stopWeather,
+                        arrivalDateTime,
                       );
+
+                      // Read forecast values
+                      final hourly = stopWeather.hourly;
+
+                      final int code =
+                      hourIndex >= 0 &&
+                          hourly?.weatherCode != null &&
+                          hourIndex < hourly!.weatherCode!.length
+                          ? hourly.weatherCode![hourIndex]
+                          : -1;
+
+                      final double temperature =
+                      hourIndex >= 0 &&
+                          hourly?.temperature2M != null &&
+                          hourIndex < hourly!.temperature2M!.length
+                          ? hourly.temperature2M![hourIndex]
+                          : stopWeather.current?.temperature2M ?? 0;
+
+                      final String rainChance =
+                      _getRainChance(stopWeather, hourIndex);
+
+                      final style = _calculateStopStyle(code);
 
                       return GestureDetector(
                         onTap: () {
@@ -404,8 +446,8 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                                 () => StopForecast(
                               stopName: stopInfo['city'] ?? '',
                               stopIndex: index + 1,
-                              totalStops: controller
-                                  .listOfStopsWeather.length,
+                              totalStops:
+                              controller.listOfStopsWeather.length,
                               arrivalTime: arrivalTime,
                               weatherModel: stopWeather,
                               departureDateTime:
@@ -417,8 +459,8 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
                           cityName: stopInfo['city'] ?? '',
                           condition: style.condition,
                           time: arrivalTime,
-                          temperature: "${temp.round()}°",
-                          rain: "$rainChance%",
+                          temperature: "${temperature.round()}°",
+                          rain: rainChance,
                           humidity:
                           "${stopWeather.current?.relativeHumidity2M ?? 0}%",
                           wind:
@@ -458,104 +500,133 @@ class _WeatherOnRouteState extends State<WeatherOnRoute> {
     );
   }
 
-  // Weather card styling based on weather condition code
-  _StopStyle _calculateStopStyle({
-    required int code,
-    required int rainChance,
-  }) {
-    // Thunderstorm
-    if (code == 95 || code == 96 || code == 99) {
-      return _StopStyle(
-        condition: "Thunderstorm",
-        iconAsset: AppAssets.cloudRainIcon,
-        iconColor: AppColors.primary,
-        cardColor: AppColors.primarySoft_grey,
-        borderColor: AppColors.softBlueBorder,
-      );
+  // Build rain chart using actual hourly forecast timestamps
+  Widget _buildRainChart() {
+    if (controller.listOfStopsWeather.isEmpty) {
+      return const SizedBox();
     }
 
-    // Heavy Rain
-    if (code == 65 ||
-        code == 67 ||
-        code == 82 ||
-        rainChance >= 75) {
-      return _StopStyle(
-        condition: "Heavy rain",
-        iconAsset: AppAssets.cloudRainIcon,
-        iconColor: AppColors.primary,
-        cardColor: AppColors.primarySoft_grey,
-        borderColor: AppColors.softBlueBorder,
-      );
-    }
+    // Use the starting location's hourly forecast
+    final WeatherModel weather =
+        controller.listOfStopsWeather.first;
 
-    // Light Rain
-    if ((code >= 51 && code <= 57) ||
-        (code >= 61 && code <= 63) ||
-        code == 66 ||
-        code == 80 ||
-        code == 81) {
-      return _StopStyle(
-        condition: "Light rain",
-        iconAsset: AppAssets.cloudRainIcon,
-        iconColor: AppColors.primary,
-        cardColor: AppColors.primarySoft_grey,
-        borderColor: AppColors.softBlueBorder,
-      );
-    }
+    final List<int> rainList =
+        weather.hourly?.precipitationProbability ?? [];
 
-    // Foggy
-    if (code == 45 || code == 48) {
-      return _StopStyle(
-        condition: "Foggy",
-        iconAsset: AppAssets.cloudIcon,
-        iconColor: AppColors.muted_grey,
-        cardColor: AppColors.greyBlue,
-        borderColor: AppColors.softGreyBlueBorder,
-      );
-    }
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.pureWhite,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Chance of rain by hour',
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.ink,
+                ),
+              ),
+              Text(
+                'Along your trip',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppColors.muted,
+                ),
+              ),
+            ],
+          ),
 
-    // Snow
-    if ((code >= 71 && code <= 77) ||
-        code == 85 ||
-        code == 86) {
-      return _StopStyle(
-        condition: "Snow",
-        iconAsset: AppAssets.cloudIcon,
-        iconColor: AppColors.slate_blue,
-        cardColor: AppColors.greyBlue,
-        borderColor: AppColors.softGreyBlueBorder,
-      );
-    }
+          16.verticalSpace,
 
-    // Cloudy
-    if (code == 3) {
-      return _StopStyle(
-        condition: "Cloudy",
-        iconAsset: AppAssets.cloudIcon,
-        iconColor: AppColors.slate_blue,
-        cardColor: AppColors.greyBlue,
-        borderColor: AppColors.softGreyBlueBorder,
-      );
-    }
+          SizedBox(
+            height: 138.h,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              itemCount: 6,
+              separatorBuilder: (context, index) =>
+              10.horizontalSpace,
+              itemBuilder: (context, index) {
+                final DateTime slotTime =
+                widget.departureDateTime.add(
+                  Duration(hours: index),
+                );
 
-    // Partly Cloudy
-    if (code == 1 || code == 2) {
-      return _StopStyle(
-        condition: "Partly cloudy",
-        iconAsset: AppAssets.partlyCloudyIcon,
-        iconColor: AppColors.slate_blue,
-        cardColor: AppColors.greyBlue,
-        borderColor: AppColors.softGreyBlueBorder,
-      );
-    }
+                final int hourIndex = _findHourlyIndex(
+                  weather,
+                  slotTime,
+                );
 
-    // Sunny / Clear
-    return _StopStyle(
-      condition: "Sunny",
-      iconAsset: AppAssets.sunIcon,
-      iconColor: AppColors.orange_yellow,
-      cardColor: AppColors.warmYellow,
-      borderColor: AppColors.warm_yellow_border,
+                final bool hasForecast =
+                    hourIndex >= 0 && hourIndex < rainList.length;
+
+                final int rainValue =
+                hasForecast ? rainList[hourIndex] : 0;
+
+                final double barHeight = hasForecast
+                    ? (rainValue * 0.65).clamp(6.0, 68.0)
+                    : 6.0;
+
+                return SizedBox(
+                  width: 42.w,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        hasForecast ? "$rainValue%" : "--",
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.ink,
+                        ),
+                      ),
+
+                      6.verticalSpace,
+
+                      Container(
+                        height: 70.h,
+                        width: 36.w,
+                        alignment: Alignment.bottomCenter,
+                        decoration: BoxDecoration(
+                          color: AppColors.background,
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Container(
+                          height: barHeight.h,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: rainValue >= 50
+                                ? AppColors.primary
+                                : AppColors.soft_blue,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                      ),
+
+                      6.verticalSpace,
+
+                      Text(
+                        DateFormat('h a').format(slotTime),
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.muted,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
