@@ -11,6 +11,7 @@ import 'package:trip_cast/utils/mapbox_config.dart';
 import 'package:trip_cast/view/screens/auth/forgot_password_screen.dart';
 import 'package:trip_cast/view/screens/auth/login_signup_screen.dart';
 import 'package:trip_cast/view/screens/auth/onBoarding_screen.dart';
+import 'package:trip_cast/view/screens/main_screens/ai_travel_recommendations.dart';
 import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/bottom_nav_home.dart';
 import 'package:trip_cast/view/screens/main_screens/date_time_screen.dart';
 import 'package:trip_cast/view/screens/main_screens/journey_map.dart';
@@ -92,7 +93,7 @@ class MyApp extends StatelessWidget {
           ),
 
 
-          home: SplashScreen(),
+          home: AiTravelRecommendations(),
         );
       },
     );
