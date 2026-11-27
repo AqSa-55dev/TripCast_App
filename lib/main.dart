@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:trip_cast/utils/mapbox_config.dart';
 import 'package:get/get.dart';
+import 'package:trip_cast/view/screens/main_screens/bottom_nav_screens/saved_journeys.dart';
 import 'package:trip_cast/view/screens/main_screens/splash_screen.dart';
 import 'package:trip_cast/view/screens/main_screens/stop_forecast.dart';
 import 'dart:ui' as ui;

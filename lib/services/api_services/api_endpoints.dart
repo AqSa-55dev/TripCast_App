@@ -6,7 +6,7 @@ class ApiEndpoints {
   static const String weatherBaseUrl =
       "https://api.open-meteo.com/v1";
 
-  // Search cities by name
+  // Search cities
   static String searchCitiesUrl(String cityName) {
     return "$geocodingBaseUrl/search?name=${Uri.encodeComponent(cityName)}&count=10&language=en&format=json";
   }
@@ -20,7 +20,8 @@ class ApiEndpoints {
         "?latitude=$latitude"
         "&longitude=$longitude"
         "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m"
-        "&hourly=temperature_2m,precipitation_probability,weather_code"
+        "&hourly=temperature_2m,apparent_temperature,relative_humidity_2m,precipitation_probability,weather_code,wind_speed_10m,uv_index,visibility"
+        "&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max"
         "&forecast_days=16"
         "&timezone=auto";
   }

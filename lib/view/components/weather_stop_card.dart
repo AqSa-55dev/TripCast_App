@@ -39,7 +39,7 @@ class WeatherStopCard extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: BorderRadius.circular(22.r),
         border: Border.all(
           color: borderColor ?? AppColors.border_grey,
           width: 1.2,
@@ -50,8 +50,8 @@ class WeatherStopCard extends StatelessWidget {
           Row(
             children: [
               Container(
-                height: 58.h,
-                width: 58.w,
+                height: 52.h,
+                width: 52.w,
                 padding: EdgeInsets.all(10.w),
                 decoration: BoxDecoration(
                   color: AppColors.pureWhite,
@@ -59,6 +59,8 @@ class WeatherStopCard extends StatelessWidget {
                 ),
                 child: Image.asset(
                   weatherIconAsset,
+                  height: 32.h,
+                  width: 32.w,
                   fit: BoxFit.contain,
                 ),
               ),
@@ -70,8 +72,8 @@ class WeatherStopCard extends StatelessWidget {
                     Text(
                       cityName,
                       style: TextStyle(
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
                         color: AppColors.ink,
                       ),
                     ),
@@ -89,7 +91,7 @@ class WeatherStopCard extends StatelessWidget {
               Text(
                 temperature,
                 style: TextStyle(
-                  fontSize: 29.sp,
+                  fontSize: 32.sp,
                   fontWeight: FontWeight.w800,
                   color: AppColors.ink,
                 ),
@@ -137,7 +139,7 @@ class WeatherStopCard extends StatelessWidget {
               value,
               style: TextStyle(
                 fontSize: 14.sp,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
                 color: AppColors.ink,
               ),
             ),

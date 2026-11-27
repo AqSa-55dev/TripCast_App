@@ -9,8 +9,9 @@ class Custombutton extends StatelessWidget {
   final Color TextColor;
   final bool ?showBoxShadow;
   final Color?BorderColor;
+  final dynamic? borderRadius;
   final void Function()? onButtonTap;
-  const Custombutton({super.key, required this.buttonText, required this.buttonColor, required this.TextColor, this.onButtonTap,  this.showBoxShadow, this.BorderColor});
+  const Custombutton({super.key, required this.buttonText, required this.buttonColor, required this.TextColor, this.onButtonTap,  this.showBoxShadow, this.BorderColor, this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class Custombutton extends StatelessWidget {
             height: 50,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: borderRadius,
               border: Border.all(color: BorderColor??AppColors.border_grey, width:2, ),
               color: buttonColor,
               boxShadow: [if (showBoxShadow==true)

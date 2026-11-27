@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/app_colors.dart';
 class CustomSmallCircleButton extends StatelessWidget {
-  final IconData? icon;
+  final dynamic? icon;
   final Color? iconColor;
   final double? size;
   final bool isIcon;
@@ -32,12 +32,22 @@ class CustomSmallCircleButton extends StatelessWidget {
         ),
         child: Align(
           alignment: Alignment.center,
-          child: isIcon?Icon(icon, color: iconColor, size: size): Text(text!, style: TextStyle(fontWeight: FontWeight(900), color: AppColors.primary, fontSize: 18),),
-          // child: Icon(
-          //   Icons.chevron_left_outlined,
-          //   color: AppColors.ink,
-          //   size: 25,
-          // ),
+          child: isIcon
+              ? (icon is Widget
+                  ? (icon as Widget)
+                  : Icon(
+                      icon as IconData?,
+                      color: iconColor,
+                      size: size,
+                    ))
+              : Text(
+                  text!,
+                  style: TextStyle(
+                    fontWeight: FontWeight(900),
+                    color: AppColors.primary,
+                    fontSize: 18,
+                  ),
+                ),
         ),
       ),
     );

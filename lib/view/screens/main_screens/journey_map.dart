@@ -2,10 +2,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:trip_cast/utils/app_colors.dart';
@@ -14,6 +11,7 @@ import 'package:trip_cast/view/components/custom_status_badge.dart';
 import 'package:trip_cast/view/screens/main_screens/weather_on_route.dart';
 
 import '../../../controller/map_controller.dart';
+import '../../../controller/saved_journeys_controller.dart';
 import '../../../model/city_search_model.dart';
 import '../../components/custom_small_circle_button.dart';
 
@@ -36,6 +34,8 @@ class JourneyMap extends StatefulWidget {
 class _JourneyMapState extends State<JourneyMap> {
   MapboxMap? mapboxMapController;
   late JourneyMapController journeyController;
+  late SavedJourneysController savedJourneysController;
+  bool isSaved = false;
 
   Offset? startLabelPosition;
   Offset? endLabelPosition;
@@ -46,6 +46,12 @@ class _JourneyMapState extends State<JourneyMap> {
   @override
   void initState() {
     super.initState();
+
+    savedJourneysController = Get.put(SavedJourneysController());
+    isSaved = savedJourneysController.isJourneySaved(
+      widget.startingLocation.name ?? '',
+      widget.destination.name ?? '',
+    );
 
     journeyController = Get.put(
       JourneyMapController(
@@ -159,8 +165,71 @@ class _JourneyMapState extends State<JourneyMap> {
 
                 CustomSmallCircleButton(
                   isIcon: true,
-                  icon: Icons.favorite_border_outlined,
-                  iconColor: AppColors.primary,
+                  icon: isSaved
+                      ? Icons.favorite
+                      : Icons.favorite_border_outlined,
+                  iconColor: isSaved ? AppColors.primary : AppColors.muted_grey,
+                  onButtonTap: () async {
+                    final fromName =
+                        widget.startingLocation.name ?? 'Starting point';
+                    final toName =
+                        widget.destination.name ?? 'Destination';
+
+                    if (isSaved) {
+                      // Journey already saved, so remove it from saved list
+                      int idx = savedJourneysController.savedJourneys
+                          .indexWhere((item) =>
+                              item['from'] == fromName &&
+                              item['to'] == toName);
+                      if (idx >= 0) {
+                        await savedJourneysController.deleteJourney(idx);
+                      }
+                      setState(() {
+                        isSaved = false;
+                      });
+                      Get.snackbar(
+                        "Removed",
+                        "Journey removed from Saved list",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: AppColors.pureWhite,
+                        colorText: AppColors.ink,
+                      );
+                    } else {
+                      // Save journey into LocalStorage
+                      await savedJourneysController.saveJourney({
+                        "from": fromName,
+                        "startLat":
+                            widget.startingLocation.latitude ?? 31.5204,
+                        "startLng":
+                            widget.startingLocation.longitude ?? 74.3587,
+                        "to": toName,
+                        "destLat": widget.destination.latitude ?? 33.6844,
+                        "destLng": widget.destination.longitude ?? 73.0479,
+                        "date":
+                            "Saved ${DateFormat('d MMM yyyy').format(DateTime.now())}",
+                        "distance": journeyController
+                                .routeDistance.value.isEmpty
+                            ? "380 km"
+                            : journeyController.routeDistance.value,
+                        "duration": journeyController
+                                .routeDuration.value.isEmpty
+                            ? "4 h 45 m"
+                            : journeyController.routeDuration.value,
+                        "weather": "Route weather saved",
+                        "status": "Caution",
+                      });
+                      setState(() {
+                        isSaved = true;
+                      });
+                      Get.snackbar(
+                        "Journey Saved",
+                        "Route added to your Saved Journeys!",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: AppColors.pureWhite,
+                        colorText: AppColors.ink,
+                      );
+                    }
+                  },
                 ),
               ],
             ),
