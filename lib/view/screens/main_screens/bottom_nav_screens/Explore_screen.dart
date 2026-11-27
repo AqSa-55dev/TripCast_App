@@ -28,6 +28,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   dynamic startingLocation = "Lahore";
   dynamic destination = "Islamabad";
 
+
   Future<void> chooseLocation(bool isStartingLocation) async {
     final selectedPlace = await Get.to(() => const ChooseLocation());
 
@@ -40,6 +41,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
         }
       });
     }
+  }
+
+  Future<void> swapLocation()async {
+    setState(() {
+      final temp = startingLocation;
+
+      startingLocation = destination;
+      destination = temp;
+    });
   }
 
   @override
@@ -203,28 +213,30 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         onTap: () {
                           // Swap starting location and destination here
                         },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.primary,
-                            border: Border.all(
-                              color: AppColors.pureWhite,
-                              width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.12),
-                                blurRadius: 8,
-                                offset: Offset(0, 3),
+                        child: InkWell(onTap: (){swapLocation();},
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.primary,
+                              border: Border.all(
+                                color: AppColors.pureWhite,
+                                width: 2,
                               ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.swap_vert,
-                            color: AppColors.pureWhite,
-                            size: 20,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.12),
+                                  blurRadius: 8,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.swap_vert,
+                              color: AppColors.pureWhite,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -232,13 +244,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ],
                 ),
 
-                Row(
-                  children: [
-                    Icon(Icons.search, color: AppColors.primary, size: 18,),
-                    Text("Search places", style: TextStyle(fontSize: 14,
-                      fontWeight: FontWeight(900),
-                      color: AppColors.primary,),),
-                  ],
+                InkWell(onTap: (){chooseLocation(false);},
+                  child: Row(
+                    children: [
+                      Icon(Icons.search, color: AppColors.primary, size: 18,),
+                      Text("Search places", style: TextStyle(fontSize: 14,
+                        fontWeight: FontWeight(900),
+                        color: AppColors.primary,),),
+                    ],
+                  ),
                 ),
                 Row(spacing: 10,
                   children: [

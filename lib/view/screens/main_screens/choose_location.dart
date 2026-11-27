@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:trip_cast/controller/choose_location_controller.dart';
 import 'package:trip_cast/view/components/custom_scaffold.dart';
 import 'package:trip_cast/view/components/custom_small_circle_button.dart';
 import 'package:trip_cast/view/components/custom_text_field.dart';
 
+import '../../../model/city_search_model.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import 'bottom_nav_screens/Explore_screen.dart';
@@ -19,6 +22,87 @@ class ChooseLocation extends StatefulWidget {
 
 
 class _ChooseLocationState extends State<ChooseLocation> {
+  Future<void> _useCurrentLocation() async {
+    try {
+      // Step 1: Check whether location services are enabled.
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+      if (!serviceEnabled) {
+        Get.snackbar(
+          "Location Disabled",
+          "Please enable your phone's location service.",
+        );
+        return;
+      }
+
+      // Step 2: Check location permission.
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      // If permission has not been granted, ask the user.
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      // If the user permanently denied permission.
+      if (permission == LocationPermission.deniedForever) {
+        Get.snackbar(
+          "Permission Required",
+          "Please allow location access from your phone settings.",
+        );
+        return;
+      }
+
+      // If permission is still denied.
+      if (permission == LocationPermission.denied) {
+        Get.snackbar(
+          "Permission Denied",
+          "TripCast needs location permission to find your location.",
+        );
+        return;
+      }
+
+      // Step 3: Get the current GPS coordinates.
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      // Step 4: Convert coordinates into a readable address.
+      final geocoding = Geocoding();
+
+      List<Placemark> placemarks =
+      await geocoding.placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      // Use the first matching address.
+      final place = placemarks.first;
+
+      // Step 5: Create a Result object using your existing model.
+      final currentLocation = Result(
+        name: place.locality ??
+            place.subAdministrativeArea ??
+            "Current Location",
+        latitude: position.latitude,
+        longitude: position.longitude,
+        country: place.country,
+        admin1: place.administrativeArea,
+      );
+
+      // Step 6: Return the selected location to the previous screen.
+      Get.back(result: currentLocation);
+
+    } catch (e) {
+      Get.snackbar(
+        "Location Error",
+        "Unable to get your current location. Please try again.",
+      );
+
+      debugPrint("Current location error: $e");
+    }
+  }
 
   @override
   void dispose() {
@@ -175,23 +259,25 @@ class _ChooseLocationState extends State<ChooseLocation> {
                       ),
                     ],
                   ),
-                  child: Row(
-                      children: [
-                        Image.asset(
-                            AppAssets.currentLocationIcon,
-                            scale: 2,
-                            color: AppColors.ink,
-                        ),
-                        12.horizontalSpace,
-                        Text(
-                          "Use my current location",
-                          style: TextStyle(
+                  child: InkWell(onTap: (){_useCurrentLocation();},
+                    child: Row(
+                        children: [
+                          Image.asset(
+                              AppAssets.currentLocationIcon,
+                              scale: 2,
                               color: AppColors.ink,
-                              fontSize: 15.sp,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
+                          ),
+                          12.horizontalSpace,
+                          Text(
+                            "Use my current location",
+                            style: TextStyle(
+                                color: AppColors.ink,
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                  ),
                 ),
 
                 12.verticalSpace,

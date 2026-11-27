@@ -201,7 +201,7 @@ class _DateTimeScreenState extends State<DateTimeScreen> {
                       ),
                       child: CalendarDatePicker(
                         initialDate: _selectedDate,
-                        firstDate: DateTime(2020),
+                        firstDate: DateTime.now(),
                         lastDate: DateTime(2030),
                         onDateChanged: (date) {
                           setState(() {
