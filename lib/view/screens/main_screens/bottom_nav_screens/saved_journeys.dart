@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import '../../../../controller/saved_journeys_controller.dart';
 import '../../../../model/city_search_model.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';
@@ -22,49 +23,9 @@ class SavedJourneys extends StatefulWidget {
 }
 
 class _SavedJourneysState extends State<SavedJourneys> {
-  List<Map<String, dynamic>> savedJourneys = [
-    {
-      "from": "Lahore",
-      "startLat": 31.5204,
-      "startLng": 74.3587,
-      "to": "Islamabad",
-      "destLat": 33.6844,
-      "destLng": 73.0479,
-      "date": "Saved 10 Nov 2026",
-      "distance": "380 km",
-      "duration": "4 h 45 m",
-      "weather": "Rain near Jhelum",
-      "status": "Caution",
-    },
-    {
-      "from": "Karachi",
-      "startLat": 24.8607,
-      "startLng": 67.0011,
-      "to": "Hyderabad",
-      "destLat": 25.3960,
-      "destLng": 68.3578,
-      "date": "Saved 5 Nov 2026",
-      "distance": "165 km",
-      "duration": "2 h 30 m",
-      "weather": "Clear all the way",
-      "status": "Suitable",
-    },
-    {
-      "from": "Islamabad",
-      "startLat": 33.6844,
-      "startLng": 73.0479,
-      "to": "Murree",
-      "destLat": 33.9070,
-      "destLng": 73.3943,
-      "date": "Saved 28 Oct 2026",
-      "distance": "60 km",
-      "duration": "1 h 30 m",
-      "weather": "Morning fog",
-      "status": "Caution",
-    },
-  ];
+  final SavedJourneysController savedController =
+      Get.put(SavedJourneysController());
 
-  // confirmation dialog before deleting
   void _confirmDelete(int index) {
     showDialog(
       context: context,
@@ -92,7 +53,7 @@ class _SavedJourneysState extends State<SavedJourneys> {
           actions: [
             TextButton(
               onPressed: () {
-                Get.back();
+                Get.back(); // Close dialog
               },
               child: Text(
                 "Cancel",
@@ -104,10 +65,8 @@ class _SavedJourneysState extends State<SavedJourneys> {
             ),
             TextButton(
               onPressed: () {
-                Get.back();
-                setState(() {
-                  savedJourneys.removeAt(index);
-                });
+                Get.back(); // Close dialog
+                savedController.deleteJourney(index); // Delete from storage
               },
               child: Text(
                 "Delete",
@@ -144,27 +103,33 @@ class _SavedJourneysState extends State<SavedJourneys> {
 
               SizedBox(height: 4.h),
 
-              Text(
-                "${savedJourneys.length} routes saved",
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.muted,
+              Obx(
+                () => Text(
+                  "${savedController.savedJourneys.length} routes saved",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.muted,
+                  ),
                 ),
               ),
 
               SizedBox(height: 16.h),
 
               Expanded(
-                child: savedJourneys.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        padding: EdgeInsets.only(bottom: 16.h),
-                        itemCount: savedJourneys.length,
-                        itemBuilder: (context, index) {
-                          final item = savedJourneys[index];
-                          return _buildSavedJourneyCard(item, index);
-                        },
-                      ),
+                child: Obx(() {
+                  if (savedController.savedJourneys.isEmpty) {
+                    return _buildEmptyState();
+                  }
+
+                  return ListView.builder(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    itemCount: savedController.savedJourneys.length,
+                    itemBuilder: (context, index) {
+                      final item = savedController.savedJourneys[index];
+                      return _buildSavedJourneyCard(item, index);
+                    },
+                  );
+                }),
               ),
             ],
           ),
@@ -358,7 +323,6 @@ class _SavedJourneysState extends State<SavedJourneys> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Bookmark / Save Icon Illustration
             Container(
               padding: EdgeInsets.all(22.w),
               decoration: BoxDecoration(
